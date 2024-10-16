@@ -394,11 +394,21 @@ This decoding process reconstructs the compressed data as accurately as possible
 
 ## How to Glitch with FFglitch
 
-Tutorial: [FFglitch Scripts](https://github.com/ramiropolla/ffglitch-scripts/blob/main/tutorial/readme.md)
+This tutorial is based on the [FFglitch Scripts guide](https://github.com/ramiropolla/ffglitch-scripts/blob/main/tutorial/readme.md), with additional tips and examples.
 
-The equivalent of "Hello World" in FFglitch involves glitching a JPEG file using its DC quantization coefficients.
+### Installation
+
+Before starting, install **FFglitch** on your system:
+
+- **Linux**: [FFglitch Installation Guide for Linux](https://github.com/ramiropolla/ffglitch-scripts/blob/main/tutorial/readme_linux.md)
+- **macOS**: [FFglitch Installation Guide for macOS](https://github.com/ramiropolla/ffglitch-scripts/blob/main/tutorial/readme_macos.md)
+- **Windows**: [FFglitch Installation Guide for Windows](https://github.com/ramiropolla/ffglitch-scripts/blob/main/tutorial/readme_windows.md)
+
+Once you’ve successfully installed FFglitch, you're ready to start experimenting.
 
 ### JPG Glitches:
+
+The equivalent of "Hello World" in FFglitch involves glitching a JPEG file using its DC quantization coefficients.
 
 1. **Modifying the DC Quantization Coefficient:**
 
