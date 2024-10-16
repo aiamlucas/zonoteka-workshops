@@ -326,7 +326,7 @@ The **green** channel is not directly encoded into the chrominance channels beca
 
 ---
 
-### 2. DCT (Discrete Cosine Transform) MAGIC
+### 2. DCT (Discrete Cosine Transform)
 
 [Reference: DCT Quantization in FFglitch](https://ffglitch.org/docs/0.10.1/codecs/dct_quant/)
 
