@@ -30,9 +30,7 @@ Our group focuses on experimentation and collaboration through **workshops**, **
 
 ## Tools in Development
 
-1. **FFglitch Web Interactive**: A web-based platform for real-time control and glitching of multimedia using **FFglitch**. Built with **React**, **Express**, **Socket.IO**, and **ZeroMQ** for interactive experiences across mobile and desktop.
-
-[GitHub Repository](https://github.com/aiamlucas/ffglitch-web-interactive)
+1. **FFglitch Web Interactive**: A web-based platform for real-time control and glitching of multimedia using **FFglitch**. Built with **React**, **Express**, **Socket.IO**, and **ZeroMQ** for interactive experiences across mobile and desktop. [ FFglitch Web Interactive GitHub Repository](https://github.com/aiamlucas/ffglitch-web-interactive)
 
 ## Upcoming Workshops
 
