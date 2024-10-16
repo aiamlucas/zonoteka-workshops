@@ -1,8 +1,10 @@
 ## 1. FFmpeg
 
-> A complete, cross-platform solution to record, convert, and stream audio and video.
+> "A complete, cross-platform solution to record, convert and stream audio and video."  
+> — [FFmpeg](https://ffmpeg.org/)
 
-FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter, and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. (https://ffmpeg.org/about.html)
+> "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation."  
+> — [FFmpeg About](https://ffmpeg.org/about.html)
 
 ## 2. What Can FFmpeg Do?
 
