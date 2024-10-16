@@ -17,7 +17,7 @@ Our group focuses on experimentation and collaboration through **workshops**, **
 2. **Collaborative Praxis**:
 
    - Beyond individual workshops, we will promote **collaborative praxis** — a space for integrating various skills and tools into unified projects.
-   - These collaborations will be presented in public showcases, with real-time displays visible to the public through **Zonoteka's large street-facing window.** As we work on our projects, passersby can view the creative process in action, turning our workspace into a dynamic work-in-progress exhibition. The window will also serve as a platform to display completed works to everyone on the street."
+   - These collaborations will be presented in public showcases, with real-time displays visible to the public through **Zonoteka's large street-facing window.** As we work on our projects, passersby can view the creative process in action, turning our workspace into a dynamic work-in-progress exhibition. The window will also serve as a platform to display completed works to everyone on the street.
 
 3. **Open-Source Tools**:
    - As we explore and experiment, we will also work on developing **open-source digital tools**. These tools will be shared with the broader creative coding communities through our GitHub repository, as well as through the individual repositories of our members.
