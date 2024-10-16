@@ -11,7 +11,7 @@ Our collective focuses on experimentation and collaboration through **workshops*
 
 1. **Workshops**:
 
-   - Members of the group will regularly share their knowledge in focused workshops. These could include topics such as **FFglitch **, **lighting techniques**, **TouchDesigner**, or any other tool or medium the collective is interested in exploring.
+   - Members of the group will regularly share their knowledge in focused workshops. These could include topics such as **FFglitch**, **lighting techniques**, **TouchDesigner**, or any other tool or medium the collective is interested in exploring.
    - Each workshop will be documented and made available in our [GitHub repository](https://github.com/aiamlucas/zonoteka-workshops), so that others can access the knowledge and contribute.
 
 2. **Collaborative Praxis**:
