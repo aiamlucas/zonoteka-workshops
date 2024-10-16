@@ -310,7 +310,7 @@ For example:
 
 Before following this tutorial, it's important to check out this **interactive website** by **Ramiro Polla**, the creator of FFglitch:
 
-##[**Demystify JPEG Magic**](http://jpeg.ffglitch.org/cram.html).
+## [**Demystify JPEG Magic**](http://jpeg.ffglitch.org/cram.html).
 
 This site will help you understand JPEG encoding and the magic behind it!
 
