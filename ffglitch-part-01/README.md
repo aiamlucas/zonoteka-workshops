@@ -187,10 +187,12 @@ ffmpeg -i input.mp4 -vf "waveform" -c:a copy output.mp4
 
 # FFglitch Workshop
 
-**FFglitch** is a multimedia **bitstream editor**, based on the open-source project **FFmpeg**. It allows you to precisely edit multimedia files at the **bitstream level**, manipulating raw or encoded binary data that makes up video, audio, or other streams in a file.
-
-One of the main benefits of FFglitch is that it generates files with a **valid bitstream**, meaning platforms like VLC or Instagram can play these files without encountering errors. This tool can be used to create **codec art**.
-[FFglitch](https://ffglitch.org/)
+> **FFglitch** is a multimedia **bitstream editor**, based on the open-source project **FFmpeg**.  
+> FFglitch allows you to very precisely edit multimedia files, down to the **bitstream level**.  
+> It generates files with a **valid bitstream**, meaning platforms like VLC or Instagram won’t have issues with your files.  
+> **FFglitch** can be used to create **codec art**.
+>
+> [Source: FFglitch](https://ffglitch.org/what/)
 
 ---
 
@@ -434,3 +436,7 @@ ffedit -i input.avi
 --> info from the file and it will say if ffglitch support the codec
 --> in case it does not support we can easyly transcode it using ffmpeg: Ex ffmpeg -i input.mp4 output.avi
 ffmpeg -i input.mov -c:v mpeg4 -q:v 1 -c:a aac -b:a 192k output.mp4
+
+raw frames ────────────⮞┌─────────┐ packets ┌─────────┐─────────⮞ raw frames  
+ │ encoder │────────────⮞│ decoder │  
+ └─────────┘ └─────────┘
