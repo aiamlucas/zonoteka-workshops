@@ -22,17 +22,17 @@ Our group focuses on experimentation and collaboration through **workshops**, **
 3. **Open-Source Tools**:
    - As we explore and experiment, we will also work on developing **open-source digital tools**. These tools will be shared with the broader creative coding communities through our GitHub repository, as well as through the individual repositories of our members.
 
-## Current Projects & Topics
+### Current Projects & Topics
 
 1. **Codec Art with FFglitch**: Creating visual distortions by manipulating multimedia files at the bitstream level.
 
-## Tools in Development
+### Tools in Development
 
 1. **FFglitch Web Interactive**: A web-based platform for real-time control and glitching of multimedia using **FFglitch**. Built with **React**, **Express**, **Socket.IO**, and **ZeroMQ** for interactive experiences across mobile and desktop.
 
 [GitHub Repository](https://github.com/aiamlucas/ffglitch-web-interactive)
 
-## Upcoming Workshops
+### Upcoming Workshops
 
 1. **FFglitch part 01**
    First part of the workshop on **FFglitch** to explore multimedia manipulation.
