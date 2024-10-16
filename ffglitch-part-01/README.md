@@ -215,7 +215,7 @@ A **multimedia container** is a file format that can hold multiple types of data
 
 ### Why Are Containers Important?
 
-Containers allow you to combine various types of media—such as video and audio—in one file. Without containers, video and audio would need to be stored separately, complicating playback and making it difficult to synchronize sound with images. Containers also enable the inclusion of **metadata** (such as title, author, or language) and **subtitles** alongside the media.
+Containers enable the storage of various media types—like video, audio, and subtitles—in one file, simplifying playback and synchronization. They also support metadata (such as title, author, or language), making it easier to manage and display additional information during playback.
 
 ---
 
@@ -235,8 +235,8 @@ Certain containers are used exclusively to store **still images** and their asso
 
 - **TIFF**: Tag Image File Format, used for high-quality raster graphics and image metadata.
 - **PDF**: Portable Document Format, which can include images, text, and more.
-- **CDR**: Corel Draw File, a vector graphics file format used in design.
-- **SVG**: Scalable Vector Graphics, used for two-dimensional vector graphics, commonly used on the web.
+- **CDR**: Corel Draw File, a vector graphics file format.
+- **SVG**: Scalable Vector Graphics, used for two-dimensional vector graphics.
 
 ---
 
@@ -253,7 +253,7 @@ Certain containers are used exclusively to store **still images** and their asso
 - **MOV (QuickTime File Format)**:
 
   - Developed by Apple, this format is optimized for **QuickTime** video.
-  - It is highly flexible and can support a variety of codecs, including both video and audio data.
+  - It is highly flexible, supporting a variety of codecs for both video and audio streams.
   - MOV is commonly used for high-quality video storage and editing, especially on macOS platforms.
 
 - **MP4 (MPEG-4 Part 14)**:
@@ -270,8 +270,9 @@ A **codec** is a software or hardware algorithm used to **encode** or **decode**
 
 - **H.264**: A widely used codec for video compression, known for its high-quality compression at relatively low bitrates.
 - **AAC**: Advanced Audio Codec, commonly used for audio compression in MP4 files.
+- **MP3**: A lossy audio codec used for compressing audio files to reduce their size, especially popular for music.
 - **MPEG-4**: A codec often used for compressing both video and audio streams.
-- **JPEG (JPG)**: A popular image compression codec.
+- **JPEG (JPG)**: A widely-used image compression codec that uses lossy compression to reduce file sizes while maintaining visual quality.
 
 ---
 
@@ -307,7 +308,7 @@ For example:
 
 # Diving into the JPEG Codec:
 
-[All JPEG details here](http://jpeg.ffglitch.org/cram.html)
+Before following this tutorial, it's important to check out this **interactive website** by **Ramiro Polla**, the creator of FFglitch: [**Demystify JPEG Magic**](http://jpeg.ffglitch.org/cram.html). This site will help you understand JPEG encoding and the magic behind it!
 
 ### 1. RGB to YUV Conversion
 
