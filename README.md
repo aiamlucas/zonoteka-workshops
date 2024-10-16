@@ -1,7 +1,7 @@
 # Zonoteka Workshop Series
 
 We aim to develop a collaborative group that bridges the worlds of art and technology, bringing together artists, developers, musicians, filmmakers, and others.
-Together, we share knowledge and collaborate to create performances, installations, and artworks, while also developing open-source digital tools for artists or anyone interested in generative art, film, and more.
+Together, we share knowledge and collaborate to create performances, installations and artworks, while also developing open-source digital tools for artists or anyone interested in generative art, film and more.
 
 ---
 
