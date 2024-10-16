@@ -437,11 +437,3 @@ Here is a very brief description of each option:
 1 Print features
 
 ffedit -i input.avi
-
---> info from the file and it will say if ffglitch support the codec
---> in case it does not support we can easyly transcode it using ffmpeg: Ex ffmpeg -i input.mp4 output.avi
-ffmpeg -i input.mov -c:v mpeg4 -q:v 1 -c:a aac -b:a 192k output.mp4
-
-raw frames ────────────⮞┌─────────┐ packets ┌─────────┐─────────⮞ raw frames  
- │ encoder │────────────⮞│ decoder │  
- └─────────┘ └─────────┘
