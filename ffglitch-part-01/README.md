@@ -422,6 +422,53 @@ The equivalent of "Hello World" in FFglitch involves glitching a JPEG file using
 ./bin/fflive -i lena.jpg -s scripts/jpeg/q_dc_delta.js
 ```
 
+### MJPEG Glitches:
+
+In addition to glitching JPEG images, **FFglitch** can also be used to glitch videos by converting them into the **MJPEG (Motion JPEG)** format. MJPEG is essentially a series of JPEG images stitched together in a video stream, meaning the same techniques used to glitch JPEG images can be applied to each frame of a video.
+
+To glitch a video using the same scripts, first convert your video to MJPEG format using **FFmpeg**, and then use the **FFglitch** scripts to modify the video frames.
+
+#### Step 1: Convert Video to MJPEG
+
+You can convert any video file (e.g., MP4, MOV) into MJPEG format using FFmpeg with the following command:
+
+```
+ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
+```
+
+- **`-c:v mjpeg`**: Specifies that the video codec should be **MJPEG**.
+- **`-q:v 1`**: Controls the quality of the output video (lower values mean higher quality).
+
+#### Step 2: Apply FFglitch Script to the MJPEG Video
+
+Once you have the video in MJPEG format, you can apply the same glitch scripts used for JPEG files. For example:
+
+1. **Modifying the DC Quantization Coefficient in MJPEG Video:**
+
+```
+./bin/fflive -i output_video.mjpeg -s scripts/jpeg/dqt.js
+```
+
+2. **Modifying the Quantized DC Delta in MJPEG Video:**
+
+```
+./bin/fflive -i output_video.mjpeg -s scripts/jpeg/q_dc_delta.js
+```
+
+These scripts will modify the quantization coefficients or deltas of the video frames, creating a visual distortion effect similar to glitching a still JPEG image but applied to each frame of the video.
+
+#### Step 3: Save the Glitched MJPEG as a New Video
+
+If you want to save the glitched MJPEG video as a playable file, use **FFmpeg** to encode the MJPEG back into a standard format, like MP4 or AVI:
+
++code
+ffmpeg -i glitched_output.mjpeg -c:v mpeg4 glitched_video.mp4
++code
+
+- **`-c:v mpeg4`**: Specifies the video codec for encoding the glitched video into MP4.
+
+This workflow lets you glitch an entire video using FFglitch by leveraging the MJPEG format.
+
 For more detailed information on MJPEG glitching features, visit the official [FFglitch MJPEG Features](https://ffglitch.org/docs/0.10.1/features/mjpeg/).
 
 ---
