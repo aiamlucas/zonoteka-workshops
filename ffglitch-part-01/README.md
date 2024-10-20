@@ -102,6 +102,14 @@ man ffmpeg
 
 ### 1. Gaussian Blur Filter
 
+You can check the details of the `pixelize` filter:
+
+```
+ffmpeg -h filter=gblur
+```
+
+Apply the Gaussian blur filter:
+
 ```
 ffmpeg -i input.mp4 -vf "gblur=sigma=20" -c:a copy output.mp4
 ```
@@ -424,16 +432,14 @@ The equivalent of "Hello World" in FFglitch involves glitching a JPEG file using
 
 ### MJPEG Glitches:
 
-In addition to glitching JPEG images, **FFglitch** can also be used to glitch videos by converting them into the **MJPEG (Motion JPEG)** format. MJPEG is essentially a series of JPEG images stitched together in a video stream, meaning the same techniques used to glitch JPEG images can be applied to each frame of a video.
-
-To glitch a video using the same scripts, first convert your video to MJPEG format using **FFmpeg**, and then use the **FFglitch** scripts to modify the video frames.
+**MJPEG (Motion JPEG)** is a video format made of a series of JPEG images.
 
 #### Step 1: Convert Video to MJPEG
 
 You can convert any video file (e.g., MP4, MOV) into MJPEG format using FFmpeg with the following command:
 
 ```
-ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
+ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 input_video.mjpeg
 ```
 
 - **`-c:v mjpeg`**: Specifies that the video codec should be **MJPEG**.
@@ -446,51 +452,13 @@ Once you have the video in MJPEG format, you can apply the same glitch scripts u
 1. **Modifying the DC Quantization Coefficient in MJPEG Video:**
 
 ```
-./bin/fflive -i output_video.mjpeg -s scripts/jpeg/dqt.js
+./bin/fflive -i input.mjpeg -s scripts/jpeg/dqt.js
 ```
 
 2. **Modifying the Quantized DC Delta in MJPEG Video:**
 
 ```
-./bin/fflive -i output_video.mjpeg -s scripts/jpeg/q_dc_delta.js
+./bin/fflive -i input_video.mjpeg -s scripts/jpeg/q_dc_delta.js
 ```
 
-These scripts will modify the quantization coefficients or deltas of the video frames, creating a visual distortion effect similar to glitching a still JPEG image but applied to each frame of the video.
-
-#### Step 3: Save the Glitched MJPEG as a New Video
-
-If you want to save the glitched MJPEG video as a playable file, use **FFmpeg** to encode the MJPEG back into a standard format, like MP4 or AVI:
-
-+code
-ffmpeg -i glitched_output.mjpeg -c:v mpeg4 glitched_video.mp4
-+code
-
-- **`-c:v mpeg4`**: Specifies the video codec for encoding the glitched video into MP4.
-
-This workflow lets you glitch an entire video using FFglitch by leveraging the MJPEG format.
-
-For more detailed information on MJPEG glitching features, visit the official [FFglitch MJPEG Features](https://ffglitch.org/docs/0.10.1/features/mjpeg/).
-
----
-
-But before going to the fancy exemples, lets go to the basics!
-
-ffedit is the main tool for FFglitch. It is a multimedia bitstream editor.
-
-Here is a very brief description of each option:
-
-    -i <input file> specifies the input media file ffedit will be reading.
-    -o <output file> specifies the output media file ffedit will be writing to.
-    -a <JSON file> specifies the JSON file ffedit will use to read data from.
-    -e <JSON file> specifies the JSON file ffedit will use to export data to.
-    -s <script file> specifies the script file ffedit will run while transplicating.
-    -sp <JSON string> specifies a JSON string argument that will be passed to the script file’s setup() function.
-    -f <feature> specifies which features ffedit will be processing.
-    -y tells ffedit to overwrite output files without asking for permission.
-    -threads <n> sets the number of threads ffedit will be using (default is all available CPU cores).
-    -t specifies test mode, used for debugging.
-    -benchmark tells ffedit to print some benchmarks, used for debugging.
-
-1 Print features
-
-ffedit -i input.avi
+For more detailed information on MJPEG glitching features: [FFglitch MJPEG Features](https://ffglitch.org/docs/0.10.1/features/mjpeg/).
