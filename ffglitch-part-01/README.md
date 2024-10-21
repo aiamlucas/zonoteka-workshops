@@ -495,7 +495,7 @@ ffmpeg -f lavfi -i "mandelbrot=size=1920x1080:rate=25:maxiter=10000" -c:v mjpeg 
 
 1. **Generate a Mandelbrot fractal**:
 
-   - **`mandelbrot=size=1920x1080:rate=25:maxiter=10000`**: Creates a Full HD Mandelbrot fractal at 25 fps, with 10,000 iterations for fine detail.
+   - **`mandelbrot=size=1920x1080:rate=25`**: Creates a Full HD Mandelbrot fractal at 25 fps.
 
 2. **Convert to MJPEG**:
 
