@@ -59,7 +59,7 @@ ffmpeg -i input.mp4 -vn -acodec libmp3lame output.mp3
 ### 3. Cut a Portion of a Video (from 30 seconds to 90 seconds)
 
 ```
-ffmpeg -i input.mp4 -ss 00:00:30 -to 00:01:30 -c copy output.mp4
+ffmpeg -i input.mp4 -ss 00:00:30 -to 00:01:30 -c copy output_short.mp4
 ```
 
 - **`-i input.mp4`**: Input file.
@@ -102,13 +102,13 @@ man ffmpeg
 
 ### 1. Gaussian Blur Filter
 
-You can check the details of the `pixelize` filter:
+You can check the details of the Gaussian Blur filter:
 
 ```
-ffmpeg -h filter=gblur
+ffmpeg -h filter=pixelize
 ```
 
-Apply the Gaussian blur filter:
+Apply the Gaussian Blur filter:
 
 ```
 ffmpeg -i input.mp4 -vf "gblur=sigma=20" -c:a copy output.mp4
@@ -217,68 +217,41 @@ Bitstreams are either:
 
 Before diving into **codec art** using FFglitch, it's important to understand the distinction between **containers** and **codecs**.
 
-### What is a Multimedia Container?
+### Containers
 
 A **multimedia container** is a file format that can hold multiple types of data streams, such as video, audio, subtitles, and metadata, all within a single file. It acts as a **wrapper** that brings together different media streams, allowing them to be stored and synchronized for playback.
 
-### Why Are Containers Important?
+#### Types of Containers
 
-Containers enable the storage of various media types—like video, audio, and subtitles—in one file, simplifying playback and synchronization. They also support metadata (such as title, author, or language), making it easier to manage and display additional information during playback.
+- **Audio Containers**: Designed to hold **audio** data.
 
----
+  - **AIFF**: Audio Interchange File Format (IFF).
+  - **WAV**: Waveform Audio File Format.
+  - **XMF**: Extensible Music Format.
+  - **FLAC**: Free Lossless Audio Codec.
 
-## 3. Types of Containers
+- **Still Image Containers**: Exclusively store **still images** and their metadata.
 
-### 1. Containers Exclusive to Audio
+  - **TIFF**: High-quality raster graphics.
+  - **PDF**: Can include images and text.
+  - **SVG**: Two-dimensional vector graphics.
 
-Some containers are specifically designed to hold **audio** data.
-
-- **AIFF**: Audio Interchange File Format (IFF).
-- **WAV**: Waveform Audio File Format, based on the RIFF (Resource Interchange File Format).
-- **XMF**: Extensible Music Format, designed for a variety of musical and sound data.
-
-### 2. Containers Exclusive to Still Images
-
-Certain containers are used exclusively to store **still images** and their associated metadata. These are common in graphics, publishing, and design applications. Examples include:
-
-- **TIFF**: Tag Image File Format, used for high-quality raster graphics and image metadata.
-- **PDF**: Portable Document Format, which can include images, text, and more.
-- **CDR**: Corel Draw File, a vector graphics file format.
-- **SVG**: Scalable Vector Graphics, used for two-dimensional vector graphics.
+- **Video Containers**: Common containers that store both **video and audio** streams.
+  - **AVI**: One of the oldest video containers developed by Microsoft.
+  - **MOV**: Developed by Apple, often used for high-quality video storage and editing.
+  - **MP4**: One of the most popular and versatile containers, commonly used for streaming and downloads.
 
 ---
 
-## 4 Video Containers
-
-### Popular Video Containers:
-
-- **AVI (Audio Video Interleave)**:
-
-  - Developed by Microsoft, it is one of the oldest video containers.
-  - It can store both video and audio streams, but it is less flexible than more modern containers.
-  - It is based on the RIFF format and is still widely used on the Windows platform.
-
-- **MOV (QuickTime File Format)**:
-
-  - Developed by Apple, this format is optimized for **QuickTime** video.
-  - It is highly flexible, supporting a variety of codecs for both video and audio streams.
-  - MOV is commonly used for high-quality video storage and editing, especially on macOS platforms.
-
-- **MP4 (MPEG-4 Part 14)**:
-  - One of the most popular and versatile containers for **video and audio**.
-  - It is based on the QuickTime file format but has become the standard for **streaming**, **digital downloads**, and **online video platforms**.
-  - MP4 supports video (typically encoded with **H.264** or **H.265**) and audio (often **AAC**), making it highly efficient for **compressing** video while maintaining quality.
-  - MP4 files can also include subtitles, chapters, and other metadata...
-
-## 5. What is a Codec?
+### Codecs
 
 A **codec** is a software or hardware algorithm used to **encode** or **decode** digital data streams, particularly video and audio. While a **container** stores and organizes different streams (video, audio, subtitles), the **codec** defines how each stream is compressed and formatted.
 
-### Example Codecs:
+#### Example of Codecs:
 
 - **H.264**: A widely used codec for video compression, known for its high-quality compression at relatively low bitrates.
-- **AAC**: Advanced Audio Codec, commonly used for audio compression in MP4 files.
-- **MP3**: A lossy audio codec used for compressing audio files to reduce their size, especially popular for music.
+- **AAC**: Advanced Audio Codec, commonly used for audio compression in MP4.
+- **MP3**: A lossy audio codec used for compressing audio files.
 - **MPEG-4**: A codec often used for compressing both video and audio streams.
 - **JPEG (JPG)**: A widely-used image compression codec that uses lossy compression to reduce file sizes while maintaining visual quality.
 
@@ -291,8 +264,8 @@ The **container** acts as the package that holds the media streams, while the **
 For example:
 
 - An **MP4** container might use the **H.264** codec for video compression and **AAC** for audio compression.
-- An AVI container can use the MPEG-4 codec for video and audio, using inter-frame compression to reduce file size while preserving quality.
-- A still image sequence within a video could be compressed using the Motion JPEG (M-JPEG) codec, where each frame is individually compressed as a JPEG image.
+- AVI containers can use MPEG-4 codec for video and audio compression.
+- A Motion JPEG (**M-JPEG**) video compresses each frame as an individual JPEG image.
 
 ---
 
@@ -321,8 +294,6 @@ Before following this tutorial, it's important to check out this **interactive w
 ## [**JPEG: from pixels to bitstream**](http://jpeg.ffglitch.org/cram.html)
 
 This site will help you understand JPEG encoding and demystify the magic behind it!
-
-### 1. RGB to YUV Conversion
 
 ## 1. Conversion from RGB to YUV
 
@@ -400,11 +371,11 @@ This decoding process reconstructs the compressed data as accurately as possible
 
 ---
 
-## How to Glitch with FFglitch
+# How to Glitch with FFglitch
 
 This tutorial is based on the [FFglitch Scripts guide](https://github.com/ramiropolla/ffglitch-scripts/blob/main/tutorial/readme.md), with additional tips and examples.
 
-### Installation
+## Installation
 
 Before starting, install **FFglitch** on your system:
 
@@ -414,32 +385,33 @@ Before starting, install **FFglitch** on your system:
 
 Once you’ve successfully installed FFglitch, you're ready to start experimenting.
 
-### JPG Glitches:
+## JPG Glitches:
 
 The equivalent of "Hello World" in FFglitch involves glitching a JPEG file using its DC quantization coefficients.
 
 1. **Modifying the DC Quantization Coefficient:**
 
 ```
-./bin/fflive -i lena.jpg -s scripts/jpeg/dqt.js
+./bin/fflive -i lena.jpg -s scripts/jpeg/random_dqt.js
 ```
 
 2. **Modifying the Quantized DC Delta:**
 
 ```
-./bin/fflive -i lena.jpg -s scripts/jpeg/q_dc_delta.js
+./bin/fflive -i lena.jpg -s scripts/jpeg/random_q_dc_delta.js
 ```
 
 ### MJPEG Glitches:
 
-**MJPEG (Motion JPEG)** is a video format made of a series of JPEG images.
+In addition to glitching JPEG images, **FFglitch** can also be used to glitch videos by converting them into the **MJPEG (Motion JPEG)** format.
+MJPEG is essentially a series of JPEG images stitched together in a video stream.
 
 #### Step 1: Convert Video to MJPEG
 
 You can convert any video file (e.g., MP4, MOV) into MJPEG format using FFmpeg with the following command:
 
 ```
-ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 input_video.mjpeg
+ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
 ```
 
 - **`-c:v mjpeg`**: Specifies that the video codec should be **MJPEG**.
@@ -452,13 +424,55 @@ Once you have the video in MJPEG format, you can apply the same glitch scripts u
 1. **Modifying the DC Quantization Coefficient in MJPEG Video:**
 
 ```
-./bin/fflive -i input.mjpeg -s scripts/jpeg/dqt.js
+./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_dqt.js
 ```
 
 2. **Modifying the Quantized DC Delta in MJPEG Video:**
 
 ```
-./bin/fflive -i input_video.mjpeg -s scripts/jpeg/q_dc_delta.js
+./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_q_dc_delta.js
 ```
 
-For more detailed information on MJPEG glitching features: [FFglitch MJPEG Features](https://ffglitch.org/docs/0.10.1/features/mjpeg/).
+2. **Another script that modify the Quantized DC Delta**
+
+```
+./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_q_dc_delta.js
+```
+
+#### Step 3: Save the Glitched MJPEG as a New Video
+
+If you want to save the glitched MJPEG video as a playable file, use **FFmpeg** to encode the MJPEG back into a standard format, like MP4 or AVI:
+
++code
+ffmpeg -i glitched_output.mjpeg -c:v mpeg4 glitched_video.mp4
++code
+
+- **`-c:v mpeg4`**: Specifies the video codec for encoding the glitched video into MP4.
+
+This workflow lets you glitch an entire video using FFglitch by leveraging the MJPEG format.
+
+For more detailed information on MJPEG glitching features, visit the official [FFglitch MJPEG Features](https://ffglitch.org/docs/0.10.1/features/mjpeg/).
+
+---
+
+But before going to the fancy exemples, lets go to the basics!
+
+ffedit is the main tool for FFglitch. It is a multimedia bitstream editor.
+
+Here is a very brief description of each option:
+
+    -i <input file> specifies the input media file ffedit will be reading.
+    -o <output file> specifies the output media file ffedit will be writing to.
+    -a <JSON file> specifies the JSON file ffedit will use to read data from.
+    -e <JSON file> specifies the JSON file ffedit will use to export data to.
+    -s <script file> specifies the script file ffedit will run while transplicating.
+    -sp <JSON string> specifies a JSON string argument that will be passed to the script file’s setup() function.
+    -f <feature> specifies which features ffedit will be processing.
+    -y tells ffedit to overwrite output files without asking for permission.
+    -threads <n> sets the number of threads ffedit will be using (default is all available CPU cores).
+    -t specifies test mode, used for debugging.
+    -benchmark tells ffedit to print some benchmarks, used for debugging.
+
+1 Print features
+
+ffedit -i input.avi
