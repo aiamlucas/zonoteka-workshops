@@ -383,11 +383,16 @@ This tutorial is based on the [FFglitch Scripts guide](https://github.com/ramiro
 
 Since **FFglitch** is a fork of **FFmpeg** specifically designed for glitch art and multimedia manipulation, it provides several command-line tools like in FFmpeg but with glitching features:
 
-- **ffedit**: It is a multimedia bitstream editor. It allows you to manipulate the bitstream of video, audio, and other media formats. [ffedit documentation](https://ffglitch.org/docs/0.10.1/ffedit/).
+- **ffedit**: Is a multimedia bitstream editor. It allows you to manipulate the bitstream of video, audio, and other media formats:
 
-- **fflive**: Similar to **ffplay**, but with added glitch capabilities. **fflive** integrates **ffedit**, allowing you to glitch multimedia content in real-time. [fflive documentation](https://ffglitch.org/docs/0.10.1/fflive/).
+  > [ffedit documentation](https://ffglitch.org/docs/0.10.1/ffedit/).
 
-- **ffgac**: A modified version of **ffmpeg**. While it behaves almost identically to **ffmpeg**, it includes additional features for glitch art manipulation. The [GAC](https://glitchartistscollective.tumblr.com/) in the name stands for **Glitch Artists Collective**. [ffgac documentation](https://ffglitch.org/docs/0.10.1/ffgac/).
+- **fflive**: Similar to **ffplay**, but with added glitch capabilities. **fflive** integrates **ffedit**, allowing you to glitch multimedia content in real-time:
+
+  > [fflive documentation](https://ffglitch.org/docs/0.10.1/fflive/).
+
+- **ffgac**: Is a modified version of **ffmpeg**. While it behaves almost identically to **ffmpeg**, it includes additional features for glitch art manipulation. The **GAC** in the name stands for [Glitch Artists Collective](https://glitchartistscollective.tumblr.com/):
+  > [ffgac documentation](https://ffglitch.org/docs/0.10.1/ffgac/).
 
 ---
 
@@ -438,12 +443,12 @@ You can convert any video file (e.g., MP4, MOV) into MJPEG format using **FFmpeg
 - Using **FFmpeg**:
 
   ```
-  ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
+  ffmpeg -i input.mp4 -c:v mjpeg -q:v 1 output.mjpeg
   ```
 
 - Using **FFglitch** (**ffgac**):
   ```
-  ./bin/ffgac -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
+  ./bin/ffgac -i input.mp4 -c:v mjpeg -q:v 1 output.mjpeg
   ```
 - **`-c:v mjpeg`**: Specifies that the video codec should be **MJPEG**.
 - **`-q:v 1`**: Controls the quality of the output video (lower values mean higher quality).
@@ -455,17 +460,17 @@ Once you have the video in MJPEG format, you can apply the same glitch scripts u
 1. **Modifying the DC Quantization Coefficient in MJPEG Video:**
 
 ```
-./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_dqt.js
+./bin/fflive -i input.mjpeg -s scripts/jpeg/dqt.js
 ```
 
 2. **Modifying the Quantized DC Delta in MJPEG Video:**
 
 ```
-./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_q_dc_delta.js
+./bin/fflive -i input.mjpeg -s scripts/jpeg/random_q_dc_delta.js
 ```
 
 3. **Another script that modify the Quantized DC Delta**
 
 ```
-./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_q_dc_delta.js
+./bin/fflive -i input.mjpeg -s scripts/jpeg/random_q_dc_delta.js
 ```
