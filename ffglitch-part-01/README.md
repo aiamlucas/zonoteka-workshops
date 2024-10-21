@@ -21,7 +21,7 @@ FFmpeg is a versatile tool that can perform a variety of multimedia tasks:
 
 ---
 
-## Basic FFmpeg Commands
+## Basic FFmpeg Commands (Examples)
 
 ### 1. Convert a File from One Format to Another
 
@@ -32,7 +32,7 @@ ffmpeg -i input.jpg output.png
 - **`-i input.jpg`**: Input file.
 - **`output.png`**: Output file.
 
-### 4. Basic Video Conversion to MPEG-4
+### 4. Video Conversion to MPEG-4
 
 ```
 ffmpeg -i input.mov -c:v mpeg4 -q:v 1 output.mp4
@@ -98,7 +98,7 @@ man ffmpeg
 
 ---
 
-## Applying Filters with FFmpeg
+## Applying Filters with FFmpeg (Examples)
 
 ### 1. Gaussian Blur Filter
 
@@ -460,17 +460,53 @@ Once you have the video in MJPEG format, you can apply the same glitch scripts u
 1. **Modifying the DC Quantization Coefficient in MJPEG Video:**
 
 ```
-./bin/fflive -i input.mjpeg -s scripts/jpeg/dqt.js
+./bin/fflive -i input.mjpeg -s ../scripts/jpeg/dqt.js
 ```
 
 2. **Modifying the Quantized DC Delta in MJPEG Video:**
 
 ```
-./bin/fflive -i input.mjpeg -s scripts/jpeg/random_q_dc_delta.js
+./bin/fflive -i input.mjpeg -s ../scripts/jpeg/random_q_dc_delta.js
 ```
 
 3. **Another script that modify the Quantized DC Delta**
 
 ```
-./bin/fflive -i input.mjpeg -s scripts/jpeg/random_q_dc_delta.js
+./bin/fflive -i input.mjpeg -s ../scripts/jpeg/random_q_dc_delta.js
 ```
+
+### Alternative: Combine Conversion and Glitching in One Command
+
+You can also perform both the conversion to MJPEG and the glitching in a single step by using a pipe (`|`) to send the MJPEG stream directly into **FFlive**:
+
+```
+./bin/ffgac -i input.mp4 -c:v mjpeg -q:v 1 -f mjpeg - | ./bin/fflive -i - -s ../scripts/jpeg/dqt.js
+```
+
+# Final Step: Piping a Generative Mandelbrot to FFglitch
+
+Now that you know how to pipe things into FFglitch, you can pipe a generated Mandelbrot fractal (https://trac.ffmpeg.org/wiki/FancyFilteringExamples) into **FFglitch** and apply real-time glitching using the `random_dqt.js` script.
+
+```
+ffmpeg -f lavfi -i "mandelbrot=size=1920x1080:rate=25:maxiter=10000" -c:v mjpeg -q:v 3 -f mjpeg - | ./bin/fflive -i - -s ../scripts/jpeg/random_dqt.js
+```
+
+#### Here's what this command does:
+
+1. **Generate a Mandelbrot fractal**:
+
+   - **`mandelbrot=size=1920x1080:rate=25:maxiter=10000`**: Creates a Full HD Mandelbrot fractal at 25 fps, with 10,000 iterations for fine detail.
+
+2. **Convert to MJPEG**:
+
+   - **`-c:v mjpeg`**: Compresses each frame of the video as a **JPEG**.
+   - **`-q:v 3`**: Sets the MJPEG quality (lower values = higher quality).
+   - **`-f mjpeg -`**: Pipes the MJPEG video stream into the next command without saving it to disk.
+
+3. **Pipe the MJPEG video to FFglitch (FFlive)**:
+   - **`| ./bin/fflive -i -`**: Sends the MJPEG stream to **fflive**, the real-time glitching tool from **FFglitch**.
+   - **`-s ../scripts/jpeg/random_dqt.js`**: Applies the **random_dqt.js** glitching script to modify the DC quantization coefficients.
+
+---
+
+#You're done! Enjoy the fractal!
