@@ -485,7 +485,7 @@ You can also perform both the conversion to MJPEG and the glitching in a single 
 
 # Final Step: Piping a Generative Mandelbrot to FFglitch
 
-Now that you know how to pipe things into FFglitch, you can pipe a generated Mandelbrot fractal (https://trac.ffmpeg.org/wiki/FancyFilteringExamples) into **FFglitch** and apply real-time glitching using the `random_dqt.js` script.
+Now that you know how to pipe things into FFglitch, you can pipe a generated Mandelbrot fractal (https://trac.ffmpeg.org/wiki/FancyFilteringExamples) into **FFglitch** and apply real-time glitching using fflive.
 
 ```
 ffmpeg -f lavfi -i "mandelbrot=size=1920x1080:rate=25:maxiter=10000" -c:v mjpeg -q:v 3 -f mjpeg - | ./bin/fflive -i - -s ../scripts/jpeg/random_dqt.js
