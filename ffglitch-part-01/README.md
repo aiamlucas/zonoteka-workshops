@@ -460,19 +460,19 @@ Once you have the video in MJPEG format, you can apply the same glitch scripts u
 1. **Modifying the DC Quantization Coefficient in MJPEG Video:**
 
 ```
-./bin/fflive -i input.mjpeg -s ../scripts/jpeg/dqt.js
+./bin/fflive -i input.mjpeg -s scripts/jpeg/dqt.js
 ```
 
 2. **Modifying the Quantized DC Delta in MJPEG Video:**
 
 ```
-./bin/fflive -i input.mjpeg -s ../scripts/jpeg/random_q_dc_delta.js
+./bin/fflive -i input.mjpeg -s scripts/jpeg/random_q_dc_delta.js
 ```
 
 3. **Another script that modify the Quantized DC Delta**
 
 ```
-./bin/fflive -i input.mjpeg -s ../scripts/jpeg/random_q_dc_delta.js
+./bin/fflive -i input.mjpeg -s scripts/jpeg/random_q_dc_delta.js
 ```
 
 ### Alternative: Combine Conversion and Glitching in One Command
@@ -480,7 +480,7 @@ Once you have the video in MJPEG format, you can apply the same glitch scripts u
 You can also perform both the conversion to MJPEG and the glitching in a single step by using a pipe (`|`) to send the MJPEG stream directly into **FFlive**:
 
 ```
-./bin/ffgac -i input.mp4 -c:v mjpeg -q:v 1 -f mjpeg - | ./bin/fflive -i - -s ../scripts/jpeg/dqt.js
+./bin/ffgac -i input.mp4 -c:v mjpeg -q:v 1 -f mjpeg - | ./bin/fflive -i - -s scripts/jpeg/dqt.js
 ```
 
 ### Final Step: Piping a Generative Mandelbrot to FFglitch
@@ -488,7 +488,7 @@ You can also perform both the conversion to MJPEG and the glitching in a single 
 Now that you know how to pipe things into FFglitch, you can pipe a generated Mandelbrot fractal (https://trac.ffmpeg.org/wiki/FancyFilteringExamples) into **FFglitch** and apply real-time glitching using fflive.
 
 ```
-ffmpeg -f lavfi -i "mandelbrot=size=1920x1080:rate=25:maxiter=10000" -c:v mjpeg -q:v 3 -f mjpeg - | ./bin/fflive -i - -s ../scripts/jpeg/random_dqt.js
+ffmpeg -f lavfi -i "mandelbrot=size=1920x1080:rate=25:maxiter=10000" -c:v mjpeg -q:v 3 -f mjpeg - | ./bin/fflive -i - -s scripts/jpeg/random_dqt.js
 ```
 
 #### Here's what this command does:
@@ -505,7 +505,7 @@ ffmpeg -f lavfi -i "mandelbrot=size=1920x1080:rate=25:maxiter=10000" -c:v mjpeg 
 
 3. **Pipe the MJPEG video to FFglitch (FFlive)**:
    - **`| ./bin/fflive -i -`**: Sends the MJPEG stream to **fflive**, the real-time glitching tool from **FFglitch**.
-   - **`-s ../scripts/jpeg/random_dqt.js`**: Applies the **random_dqt.js** glitching script to modify the DC quantization coefficients.
+   - **`-s scripts/jpeg/random_dqt.js`**: Applies the **random_dqt.js** glitching script to modify the DC quantization coefficients.
 
 ---
 
