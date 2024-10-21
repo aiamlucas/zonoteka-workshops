@@ -204,6 +204,12 @@ ffmpeg -i input.mp4 -vf "waveform" -c:a copy output.mp4
 
 ---
 
+## Understanding the Basics Before Glitching
+
+Before diving into glitch art using **FFglitch**, it’s important to recap some fundamental concepts like **bitstreams**, **containers**, and **codecs**.
+
+---
+
 ## 1. What is a Bitstream?
 
 A **bitstream** is a sequence of bits (binary digits, i.e., 0s and 1s) that represents digital data. In the context of multimedia and video/audio processing, a **bitstream** typically refers to the raw or encoded stream of binary data that constitutes the actual content of video, audio, or other types of data.
@@ -375,6 +381,25 @@ This decoding process reconstructs the compressed data as accurately as possible
 
 This tutorial is based on the [FFglitch Scripts guide](https://github.com/ramiropolla/ffglitch-scripts/blob/main/tutorial/readme.md), with additional tips and examples.
 
+Since **FFglitch** is a fork of **FFmpeg** specifically designed for glitch art and multimedia manipulation, it provides several command-line tools like in FFmpeg but with glitching features:
+
+- **ffedit**: It is a multimedia bitstream editor. It allows you to manipulate the bitstream of video, audio, and other media formats. [ffedit documentation](https://ffglitch.org/docs/0.10.1/ffedit/).
+
+- **fflive**: Similar to **ffplay**, but with added glitch capabilities. **fflive** integrates **ffedit**, allowing you to glitch multimedia content in real-time. [fflive documentation](https://ffglitch.org/docs/0.10.1/fflive/).
+
+- **ffgac**: A modified version of **ffmpeg**. While it behaves almost identically to **ffmpeg**, it includes additional features for glitch art manipulation. The [GAC](https://glitchartistscollective.tumblr.com/) in the name stands for **Glitch Artists Collective**. [ffgac documentation](https://ffglitch.org/docs/0.10.1/ffgac/).
+
+---
+
+## Codecs and Features Documentation
+
+Since FFglitch focuses on bitstream-level manipulation, it's important to understand how each codec functions and the specific features available for glitching.
+
+- [FFglitch - Codecs documentation](https://ffglitch.org/docs/0.10.1/codecs/)
+- [FFglitch - Features documentation](https://ffglitch.org/docs/0.10.1/features/)
+
+---
+
 ## Installation
 
 Before starting, install **FFglitch** on your system:
@@ -398,7 +423,7 @@ The equivalent of "Hello World" in FFglitch involves glitching a JPEG file using
 2. **Modifying the Quantized DC Delta:**
 
 ```
-./bin/fflive -i lena.jpg -s scripts/jpeg/random_q_dc_delta.js
+./bin/fflive -i lena.jpg -s scripts/jpeg/q_dc_delta.js
 ```
 
 ### MJPEG Glitches:
@@ -408,12 +433,18 @@ MJPEG is essentially a series of JPEG images stitched together in a video stream
 
 #### Step 1: Convert Video to MJPEG
 
-You can convert any video file (e.g., MP4, MOV) into MJPEG format using FFmpeg with the following command:
+You can convert any video file (e.g., MP4, MOV) into MJPEG format using **FFmpeg** or **FFglitch** with the following commands:
 
-```
-ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
-```
+- Using **FFmpeg**:
 
+  ```
+  ffmpeg -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
+  ```
+
+- Using **FFglitch** (**ffgac**):
+  ```
+  ./bin/ffgac -i input_video.mp4 -c:v mjpeg -q:v 1 output_video.mjpeg
+  ```
 - **`-c:v mjpeg`**: Specifies that the video codec should be **MJPEG**.
 - **`-q:v 1`**: Controls the quality of the output video (lower values mean higher quality).
 
@@ -433,46 +464,8 @@ Once you have the video in MJPEG format, you can apply the same glitch scripts u
 ./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_q_dc_delta.js
 ```
 
-2. **Another script that modify the Quantized DC Delta**
+3. **Another script that modify the Quantized DC Delta**
 
 ```
 ./bin/fflive -i output_video.mjpeg -s scripts/jpeg/random_q_dc_delta.js
 ```
-
-#### Step 3: Save the Glitched MJPEG as a New Video
-
-If you want to save the glitched MJPEG video as a playable file, use **FFmpeg** to encode the MJPEG back into a standard format, like MP4 or AVI:
-
-+code
-ffmpeg -i glitched_output.mjpeg -c:v mpeg4 glitched_video.mp4
-+code
-
-- **`-c:v mpeg4`**: Specifies the video codec for encoding the glitched video into MP4.
-
-This workflow lets you glitch an entire video using FFglitch by leveraging the MJPEG format.
-
-For more detailed information on MJPEG glitching features, visit the official [FFglitch MJPEG Features](https://ffglitch.org/docs/0.10.1/features/mjpeg/).
-
----
-
-But before going to the fancy exemples, lets go to the basics!
-
-ffedit is the main tool for FFglitch. It is a multimedia bitstream editor.
-
-Here is a very brief description of each option:
-
-    -i <input file> specifies the input media file ffedit will be reading.
-    -o <output file> specifies the output media file ffedit will be writing to.
-    -a <JSON file> specifies the JSON file ffedit will use to read data from.
-    -e <JSON file> specifies the JSON file ffedit will use to export data to.
-    -s <script file> specifies the script file ffedit will run while transplicating.
-    -sp <JSON string> specifies a JSON string argument that will be passed to the script file’s setup() function.
-    -f <feature> specifies which features ffedit will be processing.
-    -y tells ffedit to overwrite output files without asking for permission.
-    -threads <n> sets the number of threads ffedit will be using (default is all available CPU cores).
-    -t specifies test mode, used for debugging.
-    -benchmark tells ffedit to print some benchmarks, used for debugging.
-
-1 Print features
-
-ffedit -i input.avi

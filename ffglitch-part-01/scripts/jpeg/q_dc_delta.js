@@ -8,14 +8,12 @@ const mb_y = 16; // EXPERIMENT BY CHANGING THIS VALUE
 const dc_delta = 63; // EXPERIMENT BY CHANGING THIS VALUE
 
 /*********************************************************************/
-export function setup(args)
-{
+export function setup(args) {
   // select quantized dc delta feature
-  args.features = [ "q_dc_delta" ];
+  args.features = ["q_dc_delta"];
 }
 
-export function glitch_frame(frame, stream)
-{
+export function glitch_frame(frame, stream) {
   const data = frame.q_dc_delta.data;
   // change the DC delta value of the specified plane and macroblock
   data[plane][mb_x][mb_y] = dc_delta;

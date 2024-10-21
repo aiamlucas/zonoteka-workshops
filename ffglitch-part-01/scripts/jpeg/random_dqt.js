@@ -1,8 +1,8 @@
 // ./bin/fflive -i lena.jpg -s scripts/jpeg/dqt.js
 
 /*********************************************************************/
-//randomly change the DC quantization coefficient (from 0 to 255
-const dc_quant = Math.floor(Math.random() * 256);
+//randomly change the DC quantization coefficient (from 0 to 80)
+const dc_quant = Math.floor(Math.random() * 100);
 
 /*********************************************************************/
 export function setup(args) {
