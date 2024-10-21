@@ -509,4 +509,6 @@ ffmpeg -f lavfi -i "mandelbrot=size=1920x1080:rate=25:maxiter=10000" -c:v mjpeg 
 
 ---
 
-#You're done! Enjoy the fractal!
+**_You're done! Enjoy the fractal!_**
+
+---
