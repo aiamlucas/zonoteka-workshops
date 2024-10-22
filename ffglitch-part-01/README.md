@@ -301,22 +301,22 @@ Before following this tutorial, it's important to check out this **interactive w
 
 This site will help you understand JPEG encoding and demystify the magic behind it!
 
-## 1. Conversion from RGB to YUV
+## 1. Conversion from RGB to YCbCr (similar to YUV)
 
 [Reference: YUV in FFglitch](https://ffglitch.org/docs/0.10.1/codecs/yuv/)
 
-The first step in JPEG compression is converting the **RGB** color model to the **YUV** color model. The **RGB** model represents an image using three color components: **Red**, **Green**, and **Blue**. However, the **YUV** model separates the brightness (luminance) from the color (chrominance) information, which is more efficient for compression.
+The first step in JPEG compression is converting the **RGB** color model to the **YCbCr** color model. The **RGB** model represents an image using three color components: **Red**, **Green**, and **Blue**. However, the **YCbCr** model separates the brightness (luminance) from the color (chrominance) information, which is more efficient for compression.
 
-### YUV Components:
+### YCbCr Components:
 
 - **Y (luminance)**: Represents the **brightness** or grayscale information in the image. The human eye is more sensitive to brightness details, so this part is preserved with higher accuracy.
 
-- **U and V (chrominance)**: Represent the **color** information. Since the human eye is less sensitive to color variations, the chrominance data can be compressed more aggressively.
+- **Cb and Cr (chrominance)**: Represent the **color** information. Since the human eye is less sensitive to color variations, the chrominance data can be compressed more aggressively.
 
-  - **U (B - Y)**: This component represents the difference between the **blue** channel and the luminance (Y).
-  - **V (R - Y)**: This component represents the difference between the **red** channel and the luminance (Y).
+  - **Cb (B - Y):**: This component represents the difference between the **blue** channel and the luminance (Y).
+  - **Cr (R - Y)**: This component represents the difference between the **red** channel and the luminance (Y).
 
-The **green** channel is not directly encoded into the chrominance channels because it can be reconstructed from the luminance and the other two channels (U and V), as green dominates the luminance data.
+The **green** channel is not directly encoded into the chrominance channels because it can be reconstructed from the luminance and the other two channels (Cb and Cr), as green dominates the luminance data.
 
 ---
 

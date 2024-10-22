@@ -101,6 +101,6 @@ When decoding an MPEG-4 video, the process works in reverse:
 3. **IDCT (Inverse DCT)**: The **Inverse Discrete Cosine Transform** is applied to turn frequency data back into pixel data.
 4. **Motion Compensation**: Motion vectors are used to reconstruct the frame from reference frames.
 5. **Frame Reconstruction**: B-frames, P-frames, and S-VOPs are reconstructed using the differences from the reference frames or global motion data.
-6. **YUV to RGB Conversion**: Finally, the image is converted back from **YUV** to **RGB** for display.
+6. **YCbCr to RGB Conversion**: Finally, the image is converted back from **YUV** to **RGB** for display.
 
 ---
