@@ -2,9 +2,11 @@
 
 ## 1. Video Compression in MPEG-4
 
-[Reference: MPEG-4 in FFglitch](https://ffglitch.org/docs/0.10.1/codecs/mpeg4/)
+[MPEG-4 in FFglitch Documentation](https://ffglitch.org/docs/0.10.1/codecs/mpeg4/)
 
 The MPEG-4 codec compresses video by reducing redundancy in both spatial and temporal data. The goal is to keep high visual quality while significantly lowering the amount of data stored.
+
+The first step, like in JPEG compression, is converting the video from the **RGB** color model to **YCbCr**. This separates brightness (luminance) from color (chrominance) information, allowing for more efficient compression since the human eye is more sensitive to brightness than color.
 
 ### Temporal and Spatial Redundancy:
 

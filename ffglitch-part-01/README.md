@@ -303,7 +303,7 @@ This site will help you understand JPEG encoding and demystify the magic behind 
 
 ## 1. Conversion from RGB to YCbCr (similar to YUV)
 
-[Reference: YUV in FFglitch](https://ffglitch.org/docs/0.10.1/codecs/yuv/)
+[YUV in FFglitch Documentation](https://ffglitch.org/docs/0.10.1/codecs/yuv/)
 
 The first step in JPEG compression is converting the **RGB** color model to the **YCbCr** color model. The **RGB** model represents an image using three color components: **Red**, **Green**, and **Blue**. However, the **YCbCr** model separates the brightness (luminance) from the color (chrominance) information, which is more efficient for compression.
 
@@ -322,9 +322,9 @@ The **green** channel is not directly encoded into the chrominance channels beca
 
 ### 2. DCT (Discrete Cosine Transform)
 
-[Reference: DCT Quantization in FFglitch](https://ffglitch.org/docs/0.10.1/codecs/dct_quant/)
+[DCT Quantization in FFglitch Documentation](https://ffglitch.org/docs/0.10.1/codecs/dct_quant/)
 
-Once the image is in YUV, the **Discrete Cosine Transform (DCT)** is applied to blocks of 8x8 pixels. DCT transforms the spatial information (pixel data) into **frequency data**. Essentially, this step breaks down the image into a sum of **sinusoids** or frequency components.
+Once the image is in YCbCr, the **Discrete Cosine Transform (DCT)** is applied to blocks of 8x8 pixels. DCT transforms the spatial information (pixel data) into **frequency data**. Essentially, this step breaks down the image into a sum of **sinusoids** or frequency components.
 
 - **Low-frequency components** represent smooth areas (broad color or brightness changes).
 - **High-frequency components** represent sharp edges or detail.
@@ -359,7 +359,7 @@ After prediction and run-length encoding, the coefficients are further compresse
 
 ### 6. Final Bitstream (NBITES)
 
-Once Huffman encoding is complete, the JPEG file is converted into a final **bitstream**. This bitstream includes all the encoded data: YUV values, DCT coefficients, and Huffman-encoded symbols, ready for storage or transmission.
+Once Huffman encoding is complete, the JPEG file is converted into a final **bitstream**. This bitstream includes all the encoded data: YCbCr values, DCT coefficients, and Huffman-encoded symbols, ready for storage or transmission.
 
 ---
 
@@ -371,7 +371,7 @@ When decoding a JPEG image, the steps are essentially reversed:
 2. **Run-Length Decoding and AC/DC Prediction**: The encoded values are reconstructed, using predictions for the DC components.
 3. **Inverse Quantization**: The frequency coefficients are multiplied by the same quantization factor to retrieve the original DCT values.
 4. **IDCT (Inverse DCT)**: The **Inverse Discrete Cosine Transform** is applied to convert frequency data back into the spatial domain (pixels).
-5. **YUV to RGB Conversion**: The image is converted back from **YUV** to **RGB** for display.
+5. **YCbCr to RGB Conversion**: The image is converted back from **YCbCr** to **RGB** for display.
 
 This decoding process reconstructs the compressed data as accurately as possible, though some detail is lost due to quantization in the compression step.
 
