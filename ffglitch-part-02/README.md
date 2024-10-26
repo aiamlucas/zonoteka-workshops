@@ -266,3 +266,201 @@ The "mb" feature exports the bytestream for each macroblock as a string value. T
 The "gmc" feature exports the parameters for Global Motion Compensation.
 
 - **Note**: The GMC feature documentation is still a work in progress. As of the creation of this tutorial, full details are yet to be completed on FFglitch.org.
+
+## Introduction to MV2DArray and its Purpose in Video Processing
+
+In video processing, particularly when dealing with effects that manipulate motion, it’s essential to work with **motion vectors**—small pieces of data representing movement between frames. Each motion vector typically has two main components, **horizontal** and **vertical**, indicating movement in those directions. When applied across an entire frame, these vectors create a **2-dimensional array** representing motion throughout the video.
+
+The **`MV2DArray`** is specifically designed to manage and manipulate these motion vectors efficiently. Imagine each frame in a video as a **grid** of pixels. For each grid cell, `MV2DArray` can store and adjust a motion vector, allowing users to control or modify movement across the entire frame. This structure offers **optimized methods** for fast, large-scale transformations on these grids, helping to apply effects smoothly and quickly.
+
+Using `MV2DArray`, you can:
+
+- Represent motion across each grid cell within a frame.
+- Quickly adjust or apply complex transformations to these vectors, such as reversing directions, freezing parts of a frame, or modifying only selected areas.
+
+By organizing vectors in this way, `MV2DArray` enables **highly efficient processing** of two-dimensional video frames.
+
+### Visualizing Each Frame as a Grid of Pixels
+
+Each frame in a video can be represented as a grid. Let’s assume we have a 4x3 frame (4 columns by 3 rows) as an example.
+
+Each cell [x, y] in the grid represents a pixel location in the frame, and each cell contains a motion vector [horizontal, vertical]. These vectors dictate how that pixel should move in the frame. In MV2DArray, each cell holds such a vector.
+
+```
+   [0,0]        [0,1]        [0,2]        [0,3]
+ ┌──────────┬──────────┬──────────┬──────────┐
+0│ [1, -1]  │ [0, 0]   │ [-1, 1] │ [1, 2]   │ Row 0
+ ├──────────┼──────────┼──────────┼──────────┤
+1│ [0, -2]  │ [1, 1]   │ [0, 0]  │ [-1, 1]  │ Row 1
+ ├──────────┼──────────┼──────────┼──────────┤
+2│ [-1, 0]  │ [2, -1]  │ [1, 1]  │ [0, 0]   │ Row 2
+ └──────────┴──────────┴──────────┴──────────┘
+```
+
+Each `[horizontal, vertical]` vector can be visualized as a small arrow indicating movement:
+
+- `[1, -1]` means move right by 1 and up by 1.
+- `[0, 0]` means no movement.
+- `[-1, 1]` means move left by 1 and down by 1.
+
+### Applying Motion Effects with MV2DArray
+
+By adjusting these vectors, you can create different motion effects across the frame:
+
+1. **Horizontal Motion Freeze**: Set all horizontal vectors to `0` using `assign_h(0)` to remove left/right movement while keeping vertical movement.
+
+```
+   [0,0]        [0,1]        [0,2]        [0,3]
+ ┌──────────┬──────────┬──────────┬──────────┐
+0│ [0, -1]  │ [0, 0]   │ [0, 1]  │ [0, 2]   │ Row 0
+ ├──────────┼──────────┼──────────┼──────────┤
+1│ [0, -2]  │ [0, 1]   │ [0, 0]  │ [0, 1]   │ Row 1
+ ├──────────┼──────────┼──────────┼──────────┤
+2│ [0, 0]   │ [0, -1]  │ [0, 1]  │ [0, 0]   │ Row 2
+ └──────────┴──────────┴──────────┴──────────┘
+```
+
+2. **Vertical Motion Freeze**: Set all vertical vectors to `0` using `assign_v(0)` to **remove up/down movement** while keeping horizontal movement.
+
+```
+   [0,0]        [0,1]        [0,2]        [0,3]
+ ┌──────────┬──────────┬──────────┬──────────┐
+0│ [1, 0]   │ [0, 0]   │ [-1, 0] │ [1, 0]   │ Row 0
+ ├──────────┼──────────┼──────────┼──────────┤
+1│ [0, 0]   │ [1, 0]   │ [0, 0]  │ [-1, 0]  │ Row 1
+ ├──────────┼──────────┼──────────┼──────────┤
+2│ [-1, 0]  │ [2, 0]   │ [1, 0]  │ [0, 0]   │ Row 2
+ └──────────┴──────────┴──────────┴──────────┘
+```
+
+3. **Motion Reset**: Use `clear()` to zero out all vectors and **freeze all movement** across the frame.
+
+```
+   [0,0]        [0,1]        [0,2]        [0,3]
+ ┌──────────┬──────────┬──────────┬──────────┐
+0│ [0, 0]   │ [0, 0]   │ [0, 0]  │ [0, 0]   │ Row 0
+ ├──────────┼──────────┼──────────┼──────────┤
+1│ [0, 0]   │ [0, 0]   │ [0, 0]  │ [0, 0]   │ Row 1
+ ├──────────┼──────────┼──────────┼──────────┤
+2│ [0, 0]   │ [0, 0]   │ [0, 0]  │ [0, 0]   │ Row 2
+ └──────────┴──────────┴──────────┴──────────┘
+```
+
+These visual representations show how `MV2DArray` can be used to control motion vectors across a video frame.
+
+## MV2DArray, MV2DPtr, and MV2DMask Overview
+
+### MV2DArray
+
+`MV2DArray` is a **fixed-size 2D array** used to store [horizontal, vertical] motion vectors. Once initialized, its size (width and height) remains constant. `MV2DArray` is **dense**, meaning all cells (grid positions) are accounted for, even if their value is `null`. If any vector data is missing, it’s represented as `MV(null)`, making it compatible with all `MV` methods.
+
+### MV2DPtr
+
+> MV2DPtr is very similar to MV2DArray, and shares all the same methods. The main difference is that MV2DPtr does not have any memory allocated for its data. Instead, it points to data from MV2DArray.
+
+> Be careful not to play around with MV2DPtrs once the object they were created from has run out of its scope. You will write into unallocated memory and the program will segfault.
+
+### MV2DMask
+
+`MV2DMask` is a **2D boolean array** that selects specific parts of an `MV2DArray` for operations. By creating a `MV2DMask`, you can apply transformations to only chosen vectors within an array, making the code more efficient by skipping irrelevant areas.
+
+---
+
+## MV2DArray Constructor
+
+Creates a new `MV2DArray` with a specified width and height. All vectors initialize to `[0,0]`.
+
+**Syntax:**
+
+```
+new MV2DArray(width, height)
+```
+
+**Example:**
+
+```
+const mv2darr = new MV2DArray(3, 2);
+print(mv2darr);
+// [
+// [[0,0],[0,0],[0,0]],
+// [[0,0],[0,0],[0,0]]
+// ]
+```
+
+---
+
+## Core Operations in MV2DArray: `mathOp()`
+
+`MV2DArray` supports the math operation methods:
+
+1. **`add()`**: Adds a motion vector to each element in the array.
+2. **`sub()`**: Subtracts a vector from each element.
+3. **`mul()`**: Multiplies each element by a vector.
+4. **`div()`**: Divides each element by a vector, rounding if needed.
+5. **`assign()`**: Directly assigns a motion vector to each element.
+
+Each of these functions can apply a transformation across the entire 2D array (or to selected cells if a mask is applied).
+
+**Example of `add()` and `assign()` Usage:**
+
+```
+const mv2darr = new MV2DArray(3, 2);
+const mv2dsrc = new MV2DArray(3, 2);
+mv2darr.add(mv2dsrc); // Adds mv2dsrc vectors to mv2darr
+mv2darr.assign(MV(0, 1)); // Assigns [0,1] to each element
+```
+
+---
+
+## Applying Transformations with MV2DArray
+
+### Example Code: Horizontal Motion Freezing
+
+The following code stops horizontal motion by setting each horizontal component in the forward motion vectors to `0`.
+
+```
+export function setup(args) {
+args.features = [ "mv" ]; // Enables motion vector feature
+}
+
+export function glitch_frame(frame) {
+const fwd_mvs = frame.mv?.forward;
+if (!fwd_mvs) return; // Checks for motion vectors
+
+fwd_mvs.assign_h(0); // Sets all horizontal elements to 0
+}
+```
+
+### Explanation
+
+1. **Setup**: Enables the motion vector feature in `args`.
+2. **Motion Vector Check**: Exits if no forward motion vectors are present.
+3. **Horizontal Motion Removal**: `assign_h(0)` zeroes all horizontal components, freezing horizontal movement while keeping vertical motion.
+
+---
+
+## Advanced Example: Vertical Motion Freezing
+
+The following script allows only horizontal movement by freezing vertical motion vectors (setting all vertical values to `0`).
+
+```
+export function setup(args) {
+args.features = [ "mv" ]; // Enables motion vector feature
+}
+
+export function glitch_frame(frame) {
+const fwd_mvs = frame.mv?.forward;
+if (!fwd_mvs) return; // Checks for motion vectors
+
+fwd_mvs.assign_v(0); // Sets all vertical elements to 0
+}
+```
+
+### Explanation of New Code
+
+- **Goal**: Allows only left-right (horizontal) movement.
+- **Result**: The video shows horizontal motion only, with no up-down movement.
+
+---
+
+This guide offers the foundational tools needed to write custom video effects using `MV2DArray`, `MV2DPtr`, and `MV2DMask`. With this knowledge, users can efficiently create, modify, and apply transformations across video frames by controlling motion vectors in a structured and performant way.
