@@ -1,3 +1,15 @@
+# Codecs and Glitching
+
+Every codec is essentially a unique algorithm designed to encode and compress data, whether it’s visual, audio, or otherwise. While many codecs share similar principles—such as reducing spatial and temporal redundancy—each codec is built with specific instructions and strategies tailored for its particular purpose.
+
+In the first part of this tutorial, we focused on **JPEG** and **MJPEG**. MJPEG applies JPEG compression to each frame independently, without considering the motion or context of surrounding frames, making it simpler to manipulate but limited in functionality.
+
+Now, we’ll explore **MPEG-4**, a more advanced codec developed specifically for video. Unlike MJPEG, MPEG-4 efficiently compresses video by analyzing changes across frames, storing only the differences rather than treating each frame independently. This added complexity introduces elements like motion vectors and different types of keyframes, which encode movement and changes over time.
+
+Because each codec has a unique design, the possibilities for glitching are different too. JPEG glitches focus on static pixel data, while MPEG-4 glitches allow for the manipulation of movement and relationships between frames, enabling dynamic, sequence-based glitches.
+
+---
+
 # Diving into the MPEG-4 Codec:
 
 ## 1. Video Compression in MPEG-4
@@ -103,6 +115,154 @@ When decoding an MPEG-4 video, the process works in reverse:
 3. **IDCT (Inverse DCT)**: The **Inverse Discrete Cosine Transform** is applied to turn frequency data back into pixel data.
 4. **Motion Compensation**: Motion vectors are used to reconstruct the frame from reference frames.
 5. **Frame Reconstruction**: B-frames, P-frames, and S-VOPs are reconstructed using the differences from the reference frames or global motion data.
-6. **YCbCr to RGB Conversion**: Finally, the image is converted back from **YUV** to **RGB** for display.
+6. **YCbCr to RGB Conversion**: Finally, the image is converted back from **YCbCr** to **RGB** for display.
 
 ---
+
+# FFglitch with MPEG-4
+
+Now that we understand how MPEG-4 video is packaged into a bitstream, let’s explore how **FFglitch** allows us to manipulate motion vectors to create glitches.
+
+> **Motion vectors** track the movement of objects between frames in a video. Each frame is divided into macroblocks (16x16 pixels), and motion vectors describe how these blocks have shifted between frames.
+
+Let’s try a example where we clear the **horizontal motion vectors** of the video:
+
+```
+./bin/fflive -i input.avi -s scripts/mpeg4/mv_sink_and_rise.js
+```
+
+Here we apply the `mv_sink_and_rise.js` script to the video file. This script sets the horizontal motion vectors to zero, causing horizontal motion to freeze or glitch, while vertical motion remains intact.
+
+---
+
+> **Note**: If you want to store these modifications directly, one option is to use **ffedit** instead of `fflive`. With `ffedit`, you can apply the script and save the output in one step. We’ll go into more detail about all the FFglitch tools later in the tutorial, but here’s how you would use `ffedit` to save your modifications:
+
+```
+./bin/ffedit -i input.avi -s scripts/mpeg4/mv_sink_and_rise.js -o output.avi
+```
+
+This command will apply the `mv_sink_and_rise.js` script to the input video file and save the edited bitstream directly to `output_with_glitch.avi`.
+
+# MPEG-4 Features in FFglitch
+
+Before we go for some other fancy examples of MPEG-4 glitching, let’s take a look at the essential features that **FFglitch** provides:
+
+- **Info**
+- **Motion Vectors**
+- **Motion Vectors (Delta Only)**
+- **Macroblock**
+- **Global Motion Compensation**
+
+For more details, you can check the full documentation here: [FFglitch MPEG-4 Features](https://ffglitch.org/docs/0.10.1/features/mpeg4/). I’ll be summarizing the some points, but it's definitely worth exploring the full documentation.
+
+## Info
+
+The "info" feature exports information about the picture type and the macroblock types. This feature is informative only; no changes will be applied back when transplicating.
+
+```
+"info": {
+"pict_type": (informative) pict_type,
+"interlaced": (informative) interlaced,
+"field": (informative) (optional) field,
+"mb_type": (informative) [
+[ mb_type, mb_type, …, length: mb_width ],
+[ mb_type, mb_type, …, length: mb_width ],
+…, length: mb_height
+]
+}
+```
+
+### Key Information:
+
+- **pict_type**: Can be `"I"`, `"P"`, `"B"`, or `"S"` (for S(GMC)-frames).
+- **interlaced**: Boolean indicating if the frame is interlaced (`true`) or not (`false`).
+- **field**: Optional, either `"top"` or `"bottom"`, for interlaced frames.
+- **mb_type**: Describes the type of each macroblock (e.g., `"I"`, `"q"`, `"f"`, etc.).
+
+### Macroblock Type Flags
+
+The `mb_type` field describes the characteristics of each macroblock using a string of flags, where each flag represents a specific feature. Here are the flags:
+
+- **I**: Intra macroblock (I, P, and S(GMC) frames)
+- **a**: AC Prediction (used in I frames)
+- **q**: Macroblocks that change the quantization scale (I, P, B, and S(GMC) frames)
+- **f**: Forward motion vectors (used in P, B, and S(GMC) frames)
+- **b**: Backward motion vectors (used in B frames)
+- **d**: Direct motion vectors (used in B frames)
+- **G**: Global Motion Compensation (used in S(GMC) frames)
+- **4**: Macroblocks with 4 separate 8x8 motion vectors instead of a single 16x16 (used in P and S(GMC) frames)
+- **i**: Interlaced macroblocks (motion vectors are 16x8 in this case, used in P, B, and S(GMC) frames)
+- **1**: Macroblocks that change the DCT coefficients of the first luma block
+- **2**: Macroblocks that change the DCT coefficients of the second luma block
+- **3**: Macroblocks that change the DCT coefficients of the third luma block
+- **4**: Macroblocks that change the DCT coefficients of the fourth luma block
+- **5**: Macroblocks that change the DCT coefficients of the U chroma block
+- **6**: Macroblocks that change the DCT coefficients of the V chroma block
+
+## Motion Vectors
+
+The "mv" feature exports the motion vectors from the bitstream. There may be "forward" and "backward" motion vectors.
+
+```
+"mv": {
+"forward": (optional) [
+[ MV, MV, …, length: mb_width ],
+…, length: mb_height
+],
+"backward": (optional) [
+[ MV, MV, …, length: mb_width ],
+…, length: mb_height
+],
+"fcode": (informative) fcode,
+"overflow": overflow
+}
+```
+
+- **MV**: Motion vectors represented as arrays of horizontal and vertical components.
+- **fcode**: Used to calculate the motion vector range.
+- **overflow**: Defines the behavior if motion vectors overflow the limits.
+
+## Motion Vectors (Delta Only)
+
+The "mv_delta" feature is similar to "mv," but it exports motion vectors as delta values from the previous vectors.
+
+```
+"mv_delta": {
+"forward": (optional) [
+[ MV_delta, MV_delta, …, length: mb_width ],
+…, length: mb_height
+],
+"backward": (optional) [
+[ MV_delta, MV_delta, …, length: mb_width ],
+…, length: mb_height
+],
+"fcode": (informative) fcode,
+"overflow": overflow
+}
+```
+
+## Macroblock
+
+The "mb" feature exports the bytestream for each macroblock as a string value. This allows for manipulation and reordering of macroblocks.
+
+```
+"mb": {
+"data": (optional) [
+[ macroblock, macroblock, …, length: mb_width ],
+…, length: mb_height
+],
+"sizes": (optional) [
+[ size, size, …, length: mb_width ],
+…, length: mb_height
+]
+}
+```
+
+- **macroblock**: Hex representation of the macroblock bytestream.
+- **size**: The size of the macroblock in bits.
+
+## Global Motion Compensation
+
+The "gmc" feature exports the parameters for Global Motion Compensation.
+
+- **Note**: The GMC feature documentation is still a work in progress. As of the creation of this tutorial, full details are yet to be completed on FFglitch.org.

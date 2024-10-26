@@ -6,6 +6,8 @@
 > "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation."  
 > — [FFmpeg About](https://ffmpeg.org/about.html)
 
+FFmpeg is a free and open-source software.
+
 ## 2. What Can FFmpeg Do?
 
 FFmpeg is a versatile tool that can perform a variety of multimedia tasks:
@@ -41,9 +43,9 @@ ffmpeg -i input.mov -c:v mpeg4 -q:v 1 output.mp4
 - **`input.mov`**: Specifies the input file (input.mov), which uses the MOV container format.
 - **`-c:v mpeg4`**: Specifies the video codec as MPEG-4.
 - **`-q:v 1`**: Sets the video quality (lower value means better quality, 1 is best, 31 is worst).
-- **`output.mp4`**: Specifies the output file (output.mp4), which uses the MP4 container format.
+- **`output.avi`**: Specifies the output file (output.mp4), which uses the AVI container format.
 
-> **Note**: MP4 is a **container** that can store video, audio, subtitles, and other data. It is often associated with the **MPEG-4 codec**, but they are **not the same**—**MP4 is a container**, while **MPEG-4** is the codec used to encode the video.
+> **Note**: Note: **MPEG-4** is a **codec** used to encode video, whereas **MP4** is a **container** that can store video, audio, subtitles, and other data. While they are often associated, they are **not the same** — **MPEG-4** refers to the compression standard (the codec), and **MP4** refers to the file format (the container) that can hold the compressed media.
 
 ### 2. Extract Audio from a Video
 
