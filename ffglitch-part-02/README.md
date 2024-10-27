@@ -1,10 +1,10 @@
 # Codecs and Glitching
 
-Every codec is essentially a unique algorithm designed to encode and compress data, whether it’s visual, audio, or otherwise. While many codecs share similar principles—such as reducing spatial and temporal redundancy—each codec is built with specific instructions and strategies tailored for its particular purpose.
+Every codec is essentially a algorithm designed to encode/decode and compress data, whether it’s visual, audio, or otherwise. While many codecs share similar principles—such as reducing spatial and temporal redundancy—each codec is built with specific instructions and strategies tailored for its particular purpose.
 
 In the first part of this tutorial, we focused on **JPEG** and **MJPEG**. MJPEG applies JPEG compression to each frame independently, without considering the motion or context of surrounding frames, making it simpler to manipulate but limited in functionality.
 
-Now, we’ll explore **MPEG-4**, a more advanced codec developed specifically for video. Unlike MJPEG, MPEG-4 efficiently compresses video by analyzing changes across frames, storing only the differences rather than treating each frame independently. This added complexity introduces elements like motion vectors and different types of keyframes, which encode movement and changes over time.
+Now, we’ll explore **MPEG-4**, a more complex codec developed specifically for video. Unlike MJPEG, MPEG-4 efficiently compresses video by analyzing changes across frames, storing only the differences rather than treating each frame independently. This added complexity introduces elements like motion vectors and different types of keyframes, which encode movement and changes over time.
 
 Because each codec has a unique design, the possibilities for glitching are different too. JPEG glitches focus on static pixel data, while MPEG-4 glitches allow for the manipulation of movement and relationships between frames, enabling dynamic, sequence-based glitches.
 
@@ -16,13 +16,13 @@ Because each codec has a unique design, the possibilities for glitching are diff
 
 [MPEG-4 in FFglitch Documentation](https://ffglitch.org/docs/0.10.1/codecs/mpeg4/)
 
-The MPEG-4 codec compresses video by reducing redundancy in both spatial and temporal data. The goal is to keep high visual quality while significantly lowering the amount of data stored.
+The MPEG-4 codec compresses video by reducing redundancy in both **_spatial_** and **temporal data**. The goal is to keep high visual quality while significantly lowering the amount of data stored.
 
 The first step, like in JPEG compression, is converting the video from the **RGB** color model to **YCbCr**. This separates brightness (luminance) from color (chrominance) information, allowing for more efficient compression since the human eye is more sensitive to brightness than color.
 
 ### Temporal and Spatial Redundancy:
 
-- **Temporal Redundancy**: Video frames are often similar to one another. MPEG-4 takes advantage of this by only encoding changes between frames instead of storing every frame fully. This is done through **inter-frame compression**.
+- **Temporal Redundancy**: Video frames are often similar to one another. MPEG-4 takes advantage of this by only encoding **changes between frames** instead of storing every frame fully. This is done through **inter-frame compression**.
 - **Spatial Redundancy**: Pixels in an image (or frame) that are next to each other are often similar. This is compressed using **intra-frame compression**.
 
 ---
@@ -135,7 +135,9 @@ Here we apply the `mv_sink_and_rise.js` script to the video file. This script se
 
 ---
 
-> **Note**: If you want to store these modifications directly, one option is to use **ffedit** instead of `fflive`. With `ffedit`, you can apply the script and save the output in one step. We’ll go into more detail about all the FFglitch tools later in the tutorial, but here’s how you would use `ffedit` to save your modifications:
+> **Note**: If you want to store in another video file these modifications, one option is to use **ffedit** instead of `fflive`. With `ffedit`, you can apply the script and save the output in one step.
+
+We’ll go into more detail about all the FFglitch tools later in the tutorial, but here’s how you would use `ffedit` to save your modifications:
 
 ```
 ./bin/ffedit -i input.avi -s scripts/mpeg4/mv_sink_and_rise.js -o output.avi
@@ -269,7 +271,9 @@ The "gmc" feature exports the parameters for Global Motion Compensation.
 
 ## Introduction to MV2DArray and its Purpose in Video Processing
 
-In video processing, particularly when dealing with effects that manipulate motion, it’s essential to work with **motion vectors**—small pieces of data representing movement between frames. Each motion vector typically has two main components, **horizontal** and **vertical**, indicating movement in those directions. When applied across an entire frame, these vectors create a **2-dimensional array** representing motion throughout the video.
+In video processing, particularly when dealing with effects that manipulate motion, it’s essential to work with **motion vectors**—small pieces of data representing movement between frames.
+
+Each motion vector typically has two main components, **horizontal** and **vertical**, indicating movement in those directions. When applied across an entire frame, these vectors create a **2-dimensional array** representing motion throughout the video.
 
 The **`MV2DArray`** is specifically designed to manage and manipulate these motion vectors efficiently. Imagine each frame in a video as a **grid** of pixels. For each grid cell, `MV2DArray` can store and adjust a motion vector, allowing users to control or modify movement across the entire frame. This structure offers **optimized methods** for fast, large-scale transformations on these grids, helping to apply effects smoothly and quickly.
 
@@ -277,8 +281,6 @@ Using `MV2DArray`, you can:
 
 - Represent motion across each grid cell within a frame.
 - Quickly adjust or apply complex transformations to these vectors, such as reversing directions, freezing parts of a frame, or modifying only selected areas.
-
-By organizing vectors in this way, `MV2DArray` enables **highly efficient processing** of two-dimensional video frames.
 
 ### Visualizing Each Frame as a Grid of Pixels
 
@@ -346,8 +348,6 @@ By adjusting these vectors, you can create different motion effects across the f
  └──────────┴──────────┴──────────┴──────────┘
 ```
 
-These visual representations show how `MV2DArray` can be used to control motion vectors across a video frame.
-
 ## MV2DArray, MV2DPtr, and MV2DMask Overview
 
 ### MV2DArray
@@ -356,7 +356,7 @@ These visual representations show how `MV2DArray` can be used to control motion 
 
 ### MV2DPtr
 
-> MV2DPtr is very similar to MV2DArray, and shares all the same methods. The main difference is that MV2DPtr does not have any memory allocated for its data. Instead, it points to data from MV2DArray.
+`MV2DPtr` is very similar to MV2DArray, and shares all the same methods. The main difference is that MV2DPtr does not have any memory allocated for its data. Instead, **it points to data from MV2DArray**.
 
 > Be careful not to play around with MV2DPtrs once the object they were created from has run out of its scope. You will write into unallocated memory and the program will segfault.
 
@@ -389,7 +389,7 @@ print(mv2darr);
 
 ---
 
-## Core Operations in MV2DArray: `mathOp()`
+## Core Operations in MV2DArray:
 
 `MV2DArray` supports the math operation methods:
 
@@ -401,20 +401,14 @@ print(mv2darr);
 
 Each of these functions can apply a transformation across the entire 2D array (or to selected cells if a mask is applied).
 
-**Example of `add()` and `assign()` Usage:**
-
-```
-const mv2darr = new MV2DArray(3, 2);
-const mv2dsrc = new MV2DArray(3, 2);
-mv2darr.add(mv2dsrc); // Adds mv2dsrc vectors to mv2darr
-mv2darr.assign(MV(0, 1)); // Assigns [0,1] to each element
-```
-
 ---
 
 ## Applying Transformations with MV2DArray
 
 ### Example Code: Horizontal Motion Freezing
+
+> This script has similar functionality to mv_sink_and_rise.js, but it
+> // uses optimized functions that make it much much faster.
 
 The following code stops horizontal motion by setting each horizontal component in the forward motion vectors to `0`.
 
@@ -438,29 +432,3 @@ fwd_mvs.assign_h(0); // Sets all horizontal elements to 0
 3. **Horizontal Motion Removal**: `assign_h(0)` zeroes all horizontal components, freezing horizontal movement while keeping vertical motion.
 
 ---
-
-## Advanced Example: Vertical Motion Freezing
-
-The following script allows only horizontal movement by freezing vertical motion vectors (setting all vertical values to `0`).
-
-```
-export function setup(args) {
-args.features = [ "mv" ]; // Enables motion vector feature
-}
-
-export function glitch_frame(frame) {
-const fwd_mvs = frame.mv?.forward;
-if (!fwd_mvs) return; // Checks for motion vectors
-
-fwd_mvs.assign_v(0); // Sets all vertical elements to 0
-}
-```
-
-### Explanation of New Code
-
-- **Goal**: Allows only left-right (horizontal) movement.
-- **Result**: The video shows horizontal motion only, with no up-down movement.
-
----
-
-This guide offers the foundational tools needed to write custom video effects using `MV2DArray`, `MV2DPtr`, and `MV2DMask`. With this knowledge, users can efficiently create, modify, and apply transformations across video frames by controlling motion vectors in a structured and performant way.
