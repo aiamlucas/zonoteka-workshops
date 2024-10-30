@@ -21,16 +21,28 @@ export function glitch_frame(frame) {
   // effectively removing horizontal movement from the video.
   fwd_mvs.assign_h(0);
 
-  // try this for removing vorizontal movement from the video.
+  //////////////////////////
+  // Example modifications (methods like add(), sub(), mul(), div()):
+
+  // Remove vertical movement from the video:
   // fwd_mvs.assign_v(0);
 
-  //////////////////////////
-  // try to use other methods like add(), sub(), mul(), div():
-  // fwd_mvs.add_h(27); // try this
-  // fwd_mvs.add_h(-27); // try this
-  // fwd_mvs.sub_h(27); // try this
-  // fwd_mvs.add_v(15); // try this
-  // fwd_mvs.mul_h(27); // // try this!
-  // fwd_mvs.div_v(27); //
+  // Apply a positive horizontal shift:
+  // fwd_mvs.add_h(27);
+
+  // Apply a negative horizontal shift:
+  // fwd_mvs.add_h(-27);
+
+  // Subtract from horizontal elements:
+  // fwd_mvs.sub_h(27);
+
+  // Add vertical shift:
+  // fwd_mvs.add_v(15);
+
+  // Multiply horizontal elements by 27:
+  // fwd_mvs.mul_h(27);
+
+  // Divide vertical elements by 27:
+  // fwd_mvs.div_v(27);
   //////////////////////////
 }
