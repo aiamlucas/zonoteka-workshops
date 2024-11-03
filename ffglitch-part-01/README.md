@@ -37,7 +37,7 @@ ffmpeg -i input.jpg output.png
 ### 4. Video Conversion to MPEG-4
 
 ```
-ffmpeg -i input.mov -c:v mpeg4 -q:v 1 output.mp4
+ffmpeg -i input.mov -c:v mpeg4 -q:v 1 output.avi
 ```
 
 - **`input.mov`**: Specifies the input file (input.mov), which uses the MOV container format.
