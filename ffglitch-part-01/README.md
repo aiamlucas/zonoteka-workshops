@@ -59,14 +59,14 @@ ffmpeg -i input.avi -vn -acodec libmp3lame output.mp3
 ### 3. Cut a Portion of a Video (from 30 seconds to 90 seconds)
 
 ```
-ffmpeg -i input.avi -ss 00:00:30 -to 00:01:30 -c copy output_short.mp4
+ffmpeg -i input.avi -ss 00:00:30 -to 00:01:30 -c copy output_short.avi
 ```
 
 - **`-i input.avi`**: Input file.
 - **`-ss 00:00:30`**: Specifies the start time for the cut (30 seconds in this case).
 - **`-to 00:01:30`**: Specifies the end time for the cut (1 minute and 30 seconds in this case).
 - **`-c copy`**: Copies both the video and audio streams without re-encoding, preserving the original quality.
-- **`output.mp4`**: Output file.
+- **`output.avi`**: Output file.
 
 ---
 
