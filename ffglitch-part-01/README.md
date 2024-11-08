@@ -130,7 +130,7 @@ ffmpeg -h filter=pixelize
 Apply the pixelize filter:
 
 ```
-ffmpeg -i input.mp4 -vf "pixelize=w=12:h=12" -c:a copy output.mp4
+ffmpeg -i input.avi -vf "pixelize=w=12:h=12" -c:a copy output.avi
 ```
 
 - **`-i input.mp4`**: Input file.
@@ -144,52 +144,52 @@ ffmpeg -i input.mp4 -vf "pixelize=w=12:h=12" -c:a copy output.mp4
 ffmpeg -i input.mp4 -vf "drawgrid=w=100:h=100:color=orange" -c:a copy output.mp4
 ```
 
-- **`-i input.mp4`**: Input file.
+- **`-i input.avi`**: Input file.
 - **`-vf "drawgrid=w=100:h=100:color=orange"`**: Adds a grid overlay to the video, where each grid cell has a width (`w`) and height (`h`) of 100 pixels, and the grid lines are orange.
 - **`-c:a copy`**: Copies the audio stream without re-encoding.
-- **`output.mp4`**: Output file.
+- **`output.avi`**: Output file.
 
 ### 4. Hue Filter
 
 Make the video cycle through hues in a full 360-degree rotation every 20 seconds.
 
 ```
-ffmpeg -i input.mp4 -vf "hue='h=mod(t\*360/20,360)'" -c:a copy output.mp4
+ffmpeg -i input.avi -vf "hue='h=mod(t\*360/20,360)'" -c:a copy output.avi
 ```
 
-- **`-i input.mp4`**: Input file.
+- **`-i input.avi`**: Input file.
 - **`-vf "hue='h=mod(t\*360/20,360)'`**: Applies a hue shift filter, where the hue (`h`) rotates through 360 degrees every 20 seconds. The `mod(t*360/20,360)` ensures the hue wraps around after 360 degrees.
 - **`t`**: Refers to the time in seconds.
 - **`360/20`**: Divides 360 degrees by 20 seconds, meaning the hue will complete a full rotation every 20 seconds.
 - **`mod(...,360)`**: Ensures the hue loops after reaching 360 degrees.
 - **`-c:a copy`**: Copies the audio stream without re-encoding.
-- **`output.mp4`**: Output file.
+- **`output.avi`**: Output file.
 
 ### 5. Random Frame Picking
 
 Pick random frames from the video.
 
 ```
-ffmpeg -i input.mp4 -vf "random=frames=100" -c:a copy output.mp4
+ffmpeg -i input.avi -vf "random=frames=100" -c:a copy output.avi
 ```
 
-- **`-i input.mp4`**: Specifies the input file.
+- **`-i input.avi`**: Specifies the input file.
 - **`-vf "random=frames=100"`**: Applies a random frame filter, which keeps a cache of 100 frames and shuffles them randomly in the output.
 - **`-c:a copy`**: Copies the audio stream without re-encoding.
-- **`output.mp4`**: Output file.
+- **`output.avi`**: Output file.
 
 ### 6 Basic Waveform Filter
 
 Visualize the video as a waveform.
 
 ```
-ffmpeg -i input.mp4 -vf "waveform" -c:a copy output.mp4
+ffmpeg -i input.avi -vf "waveform" -c:a copy output.avi
 ```
 
-- **`-i input.mp4`**: Specifies the input file.
+- **`-i input.avi`**: Specifies the input file.
 - **`-vf "waveform"`**: Applies a waveform filter, generating a visual representation of the video's waveform.
 - **`-c:a copy`**: Copies the audio stream without re-encoding.
-- **`output.mp4`**: Output file.
+- **`output.avi`**: Output file.
 
 ---
 
