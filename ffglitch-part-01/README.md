@@ -51,7 +51,7 @@ ffmpeg -i input.mov -c:v mpeg4 -q:v 1 output.avi
 ffmpeg -i input.avi -vn -acodec libmp3lame output.mp3
 ```
 
-- **`-i video.mp4`**: Input file.
+- **`-i video.avi`**: Input file.
 - **`-vn`**: Stands for "video none," meaning the video stream will be omitted in the output (only audio will be processed).
 - **`-acodec libmp3lame`**: Specifies the MP3 codec (LAME) for encoding the audio into MP3 format.
 - **`audio.mp3`**: Output file.
