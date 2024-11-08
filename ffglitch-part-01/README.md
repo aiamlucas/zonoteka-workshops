@@ -45,12 +45,10 @@ ffmpeg -i input.mov -c:v mpeg4 -q:v 1 output.avi
 - **`-q:v 1`**: Sets the video quality (lower value means better quality, 1 is best, 31 is worst).
 - **`output.avi`**: Specifies the output file (output.mp4), which uses the AVI container format.
 
-> **Note**: Note: **MPEG-4** is a **codec** used to encode video, whereas **MP4** is a **container** that can store video, audio, subtitles, and other data. While they are often associated, they are **not the same** — **MPEG-4** refers to the compression standard (the codec), and **MP4** refers to the file format (the container) that can hold the compressed media.
-
 ### 2. Extract Audio from a Video
 
 ```
-ffmpeg -i input.mp4 -vn -acodec libmp3lame output.mp3
+ffmpeg -i input.avi -vn -acodec libmp3lame output.mp3
 ```
 
 - **`-i video.mp4`**: Input file.
@@ -61,10 +59,10 @@ ffmpeg -i input.mp4 -vn -acodec libmp3lame output.mp3
 ### 3. Cut a Portion of a Video (from 30 seconds to 90 seconds)
 
 ```
-ffmpeg -i input.mp4 -ss 00:00:30 -to 00:01:30 -c copy output_short.mp4
+ffmpeg -i input.avi -ss 00:00:30 -to 00:01:30 -c copy output_short.mp4
 ```
 
-- **`-i input.mp4`**: Input file.
+- **`-i input.avi`**: Input file.
 - **`-ss 00:00:30`**: Specifies the start time for the cut (30 seconds in this case).
 - **`-to 00:01:30`**: Specifies the end time for the cut (1 minute and 30 seconds in this case).
 - **`-c copy`**: Copies both the video and audio streams without re-encoding, preserving the original quality.
@@ -107,19 +105,19 @@ man ffmpeg
 You can check the details of the Gaussian Blur filter:
 
 ```
-ffmpeg -h filter=pixelize
+ffmpeg -h filter=gblur
 ```
 
 Apply the Gaussian Blur filter:
 
 ```
-ffmpeg -i input.mp4 -vf "gblur=sigma=20" -c:a copy output.mp4
+ffmpeg -i input.avi -vf "gblur=sigma=20" -c:a copy output.avi
 ```
 
-- **`-i input.mp4`**: Input file.
+- **`-i input.avi`**: Input file.
 - **`-vf "gblur=sigma=20"`**: Applies a Gaussian blur filter with a **sigma** value of 20. The higher the sigma value, the stronger the blur effect.
 - **`-c:a copy`**: Copies the audio stream without re-encoding.
-- **`output.mp4`**: Output file.
+- **`output.avi`**: Output file.
 
 ### 2. Pixelize Filter
 
@@ -222,8 +220,6 @@ Bitstreams are either:
 - **Encoded**: Compressed data using a codec (e.g., H.264 for video).
 
 ## 2. Understanding Containers and Codecs
-
-Before diving into **codec art** using FFglitch, it's important to understand the distinction between **containers** and **codecs**.
 
 ### Containers
 
