@@ -51,116 +51,122 @@ yt-dlp -f 'best' -o "trailer.mp4" https://youtu.be/YourVideoID
 
 This will download the trailer as `trailer.mp4`, which you’ll use in the next steps for scene detection and reassembly.
 
-### 2. Identify the Cuts in the Video
+### Step 2: Run the Script `split_scenes.sh` to Detect and Extract Scenes
 
-Using FFmpeg, detect the scene cuts automatically by analyzing pixel differences between frames. The following command generates a list of timestamps for each detected cut and outputs them in `scenes_converted.txt`:
+The script (`split_scenes.sh`) is designed to automatically detect scene changes in a video, save the timestamps for each scene cut, and then extract each scene as a separate video file. Here’s how the script works in two main sections:
+
+1. **Detect Scene Change Timestamps**: Identifies scene changes based on pixel differences and logs the timestamps.
+2. **Extract Each Scene Using Timestamps**: Uses these timestamps to cut the video into individual scenes and saves each one as a separate video file.
+
+### Full Command Breakdown
 
 ```
-ffmpeg -i trailer.mp4 -vf "select='gt(scene,0.1)',showinfo" -vsync vfr -f null - 2>&1 | \
-grep "pts_time:" | sed -E "s/.\*pts_time:([0-9]+\.[0-9]+)/\1/" | \
+ffmpeg -i "$input_file" -vf "select='gt(scene,0.1)',showinfo" -vsync vfr -f null - 2>&1 | \
+grep "pts_time:" | sed -E "s/.*pts_time:([0-9]+\.[0-9]+)/\1/" | \
 awk '{ secs=$1; hrs=int(secs/3600); mins=int((secs%3600)/60); secs=secs%60; printf("%02d:%02d:%06.3f\n", hrs, mins, secs) }' > scenes_converted.txt
 ```
 
-### Explanation of Each Step of the Command:
+This command pipeline generates a list of scene cut timestamps in `hh:mm:ss.ms` format and saves them in `scenes_converted.txt`. Below is a detailed explanation of each part.
 
-1. **Scene Detection and Frame Processing (FFmpeg)**
+#### 1. **Scene Detection and Frame Processing (FFmpeg)**
 
-   The first part of the command runs **FFmpeg** to analyze the video for scene changes and outputs frame information:
+```
+ffmpeg -i "$input_file" -vf "select='gt(scene,0.1)',showinfo" -vsync vfr -f null -
+```
 
-   ```
-   ffmpeg -i trailer.mp4 -vf "select='gt(scene,0.1)',showinfo" -vsync vfr -f null -
-   ```
+- **`-i "$input_file"`**: Specifies the input file (e.g., `trailer.mp4`) to analyze for scene cuts.
+- **`-vf "select='gt(scene,0.1)',showinfo"`**: Applies two filters:
+  - **`select='gt(scene,0.1)'`**: The `select` filter uses FFmpeg's `scene` detection feature with a threshold of `0.1` (10%), marking frames where 10% or more of the pixels change significantly as scene cuts.
+  - **`showinfo`**: Adds extra logging data for each frame, including timestamp information that is used for identifying scene changes.
+- **`-vsync vfr`**: Ensures a variable frame rate, producing output only for frames that meet the scene change criteria.
+- **`-f null -`**: Specifies the output format as `null`, meaning FFmpeg will process frames but not save them to a video file. The purpose is logging data only.
 
-   - **`-i trailer.mp4`**: Specifies `trailer.mp4` as the input file.
-   - **`-vf "select='gt(scene,0.1)',showinfo"`**:
-     - **`select='gt(scene,0.1)'`**: FFmpeg’s **select** filter uses the `scene` detection feature to analyze differences between frames. Here, `scene` is set to 0.1 (or 10%)—a threshold that triggers FFmpeg to log a “scene change” whenever 10% or more of the pixels differ significantly from the previous frame.
-     - **`showinfo`**: This filter provides additional frame-level information, including timestamp details, which FFmpeg logs to the console.
-   - **`-vsync vfr`**: Ensures the output frame rate is variable, meaning FFmpeg only outputs frames that meet the scene change criteria.
-   - **`-f null -`**: Sets the output format to `null`, meaning FFmpeg does not create an output video but logs frame information for further processing.
-   - **`2>&1`**: Redirects standard error (stderr) to standard output (stdout), allowing the `grep` command to read all logged information.
+- **`2>&1`**: Redirects standard error (stderr) to standard output (stdout) so `grep` can read all output in a single stream.
 
-2. **Filtering Timestamps (grep and sed)**
+#### 2. **Extracting and Formatting Timestamps**
 
-   The next segment isolates timestamps for each detected cut:
+```
+grep "pts_time:" | sed -E "s/.*pts_time:([0-9]+\.[0-9]+)/\1/" | \
+awk '{ secs=$1; hrs=int(secs/3600); mins=int((secs%3600)/60); secs=secs%60; printf("%02d:%02d:%06.3f\n", hrs, mins, secs) }' > scenes_converted.txt
+```
 
-   ```
-   grep "pts_time:" | sed -E "s/.*pts_time:([0-9]+\.[0-9]+)/\1/"
-   ```
+- **`grep "pts_time:"`**: Filters the output for lines containing `pts_time:`, which indicates frame timestamps in FFmpeg's log.
 
-   - **`grep "pts_time:"`**: Searches through FFmpeg’s output to find lines containing `pts_time:`, which represent the timestamps of frames where scene changes were detected.
-   - **`sed -E "s/.*pts_time:([0-9]+\.[0-9]+)/\1/"`**: This uses `sed` (stream editor) to extract the numerical part of each timestamp. It matches `pts_time:` followed by one or more digits, capturing only the timestamp (e.g., `123.456` seconds) by removing everything else.
-
-3. **Formatting the Timestamps (awk)**
-
-   Finally, the `awk` command converts timestamps from seconds into `hh:mm:ss.ms` format and saves the output in `scenes_converted.txt`:
-
-   ```
-   awk '{ secs=$1; hrs=int(secs/3600); mins=int((secs%3600)/60); secs=secs%60; printf("%02d:%02d:%06.3f\n", hrs, mins, secs) }' > scenes_converted.txt
-   ```
-
-   - **`secs=$1`**: Stores the raw seconds value from `grep` and `sed`.
-   - **`hrs=int(secs/3600)`**: Converts total seconds into hours by dividing by 3600.
-   - **`mins=int((secs%3600)/60)`**: Calculates remaining minutes.
-   - **`secs=secs%60`**: Converts the remaining seconds.
-   - **`printf("%02d:%02d:%06.3f\n", hrs, mins, secs)`**: Prints each timestamp in `hh:mm:ss.ms` format, ensuring that hours, minutes, and seconds are formatted as two-digit values, with milliseconds as three decimal places.
-   - **`> scenes_converted.txt`**: Directs the formatted timestamps into a file named `scenes_converted.txt`.
+- **`sed -E "s/.*pts_time:([0-9]+\.[0-9]+)/\1/"`**: Uses `sed` to clean up the output, keeping only the numerical timestamp and removing extra text.
+- **`awk '{ secs=$1; hrs=int(secs/3600); mins=int((secs%3600)/60); secs=secs%60; printf("%02d:%02d:%06.3f\n", hrs, mins, secs) }'`**: Converts each timestamp into a more readable format, `hh:mm:ss.ms`, and saves them in `scenes_converted.txt`.
 
 ---
 
-### Step 3: Run the Scene Splitting Script
+### Extracting Each Scene Using the Timestamps
 
-Now that you have your cuts stored in `scenes_converted.txt`, you’re ready to use the `split_scenes.sh` script to segment the video based on those timestamps. This script will generate separate video files for each cut, naming them sequentially (`scene_1.mp4`, `scene_2.mp4`, etc.).
+The second part of the script reads each timestamp from `scenes_converted.txt`, extracting segments between each consecutive pair of timestamps and creating separate video files for each.
 
-#### How `split_scenes.sh` Works
+#### Commands for Extracting Scenes
 
-1. The script starts by prompting you to enter the name of the video file you want to split.
-2. It reads each timestamp from `scenes_converted.txt` and uses these timestamps as cut points.
-3. **FFmpeg** extracts each scene segment, using the timestamp as the end point for the current scene and the start point for the next.
-4. Finally, it handles the last segment, cutting from the last timestamp to the end of the video.
+```
+ffmpeg -i "$input_file" -ss "$start_time" -to "$end_time" -c copy "$output_file"
+```
 
-#### Running `split_scenes.sh`
+Explanation of key options here:
 
-1. Make the script executable (necessary for both Linux and macOS users):
+- **`-ss "$start_time"`**: Specifies the start time for the segment, initialized as the previous scene's end time.
+- **`-to "$end_time"`**: Specifies the end time for the segment, which is the next detected scene change.
+- **`-c copy`**: Copies video and audio streams without re-encoding, preserving the original quality in the output.
 
-   ```
-   chmod +x bash-scripts/split_scenes.sh
-   ```
+This loop continues for each timestamp, creating segments such as `scene_1.mp4`, `scene_2.mp4`, etc.
 
-2. Run the script:
+#### Handling the Last Segment
 
-   ```
-   ./bash-scripts/split_scenes.sh
-   ```
+Once all timestamps have been processed, the script handles the last segment:
 
-3. Enter the video filename (e.g., `trailer.mp4`) when prompted.
+```
+ffmpeg -i "$input_file" -ss "$start_time" -c copy "$output_file"
+```
 
-This will generate separate scene files named `scene_1.mp4`, `scene_2.mp4`, etc., in the current directory.
+This command extracts from the last recorded timestamp to the end of the video, ensuring no scenes are missed.
 
-### Step 4: Run the Random Concatenation Script
+---
 
-With each scene segment created, you can now use the `random_concat.sh` script to reassemble them into a new video, arranged in a random order. This script will re-encode each scene into an MJPEG format to maintain compatibility and avoid metadata conflicts, then concatenate them to create a new montage.
+### Summary
 
-#### How `random_concat.sh` Works
+1. **Scene Detection**: FFmpeg analyzes the input video, detects scene changes, and logs timestamps.
+2. **Timestamp Formatting**: `grep`, `sed`, and `awk` clean and format these timestamps into `hh:mm:ss.ms`.
+3. **Scene Extraction**: The script reads each timestamp, cutting segments for each scene and saving them as separate video files.
 
-1. The script re-encodes each `scene_*.mp4` file to MJPEG format with audio preserved, removes potentially conflicting metadata, and saves them in a temporary `reencoded_scenes` directory.
-2. It randomly shuffles the re-encoded scene files and generates a list file (`reencoded_scene_list.txt`) for FFmpeg’s concat filter.
-3. FFmpeg then concatenates the scenes into a single video file, `random-timeline.mp4`.
-4. The script cleans up by deleting temporary files and folders.
+---
 
-#### Running `random_concat.sh`
+### Step 3: Run `random_concat.sh` to Reassemble Scenes in Random Order
 
-1. Make the script executable:
+With each scene segment created, you can now use the `random_concat.sh` script to reassemble them in a random order. The key FFmpeg commands used within this script include:
 
-   ```
-   chmod +x bash-scripts/random_concat.sh
-   ```
-
-2. Run the script:
+1. **Re-encoding to MJPEG**:
 
    ```
-   ./bash-scripts/random_concat.sh
+   ffmpeg -i "$file" \
+          -c:v mjpeg -q:v 2 -pix_fmt yuvj420p -an \
+          -c:a aac -b:a 128k -map 0:a -map 0:v \
+          -fflags +genpts \
+          -r 24 \
+          -metadata:s:v:0 handler=" " \
+          -metadata:s:a:0 handler=" " \
+          -metadata:s:v:0 vendor_id=" " \
+          -y "reencoded_scenes/scene_${count}.mp4"
    ```
 
-The output will be saved as `random-timeline.mp4`
+   - **`-c:v mjpeg`**: Specifies MJPEG as the output video codec, a format compatible with concatenation.
+   - **`-q:v 2`**: Sets high video quality; lower values indicate better quality.
+   - **`-pix_fmt yuvj420p`**: Sets pixel format to a widely compatible format for MJPEG.
+   - **`-map 0:a -map 0:v`**: Ensures all audio and video streams from the input are included.
+   - **`-fflags +genpts`**: Generates PTS timestamps to avoid sync issues in concatenation.
+   - **`-metadata`**: Removes handler and vendor metadata, preventing playback conflicts.
+
+2. **Randomizing and Concatenating**:
+
+   ```
+   ffmpeg -f concat -safe 0 -i reencoded_scene_list.txt -c copy random-timeline.mp4
+   ```
+
+   - **`-f concat -safe 0`**: Uses FFmpeg’s concat demuxer to safely concatenate multiple files.
+   - **`-c copy`**: Copies streams without re-encoding, preserving quality in the final output.
 
 ---
