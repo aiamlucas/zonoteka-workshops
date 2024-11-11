@@ -21,9 +21,7 @@ Start by downloading the trailer using **yt-dlp**.
 
 #### Install `yt-dlp`
 
-For Linux and macOS users, you can install `yt-dlp` with the following commands:
-
-1. **Linux/macOS Installation**:
+1. **Intall via APT (Linux)**:
 
    ```
    sudo apt update
