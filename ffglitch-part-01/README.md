@@ -420,7 +420,7 @@ The equivalent of "Hello World" in FFglitch involves glitching a JPEG file using
 1. **Modifying the DC Quantization Coefficient:**
 
 ```
-./bin/fflive -i lena.jpg -s scripts/jpeg/random_dqt.js
+./bin/fflive -i lena.jpg -s scripts/jpeg/dqt.js
 ```
 
 2. **Modifying the Quantized DC Delta:**
